@@ -1,0 +1,4 @@
+tskit>=0.5.6
+networkx>=3.2.1
+matplotlib>=3.8.3
+pytest>=8.0.2
