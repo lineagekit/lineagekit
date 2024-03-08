@@ -8,6 +8,7 @@ from __future__ import annotations
 from tskit import Tree
 from collections import defaultdict
 from typing import Sequence
+import warnings
 
 
 class SimpleGraph:
@@ -302,7 +303,8 @@ class SimpleGraph:
         except ValueError:
             raise Exception("Invalid line")
         if child in self.parents_map:
-            raise ValueError("The same individual is specified multiple times in the input file")
+            warnings.warn(f"Individual {child} is specified multiple times in the graph."
+                          f"The previous parents are {self.parents_map[child]}, new values: {parents}", UserWarning)
         for parent in parents:
             if parent not in missing_parent_notation:
                 self.add_edge(parent=parent, child=child)
