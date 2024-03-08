@@ -134,7 +134,12 @@ class GenealogicalGraph(SimpleGraph):
         """!
         @brief Returns whether the vertex belongs to the top level of the graph
         """
-        return self.vertex_to_level_map[vertex] == len(self.levels) - 1
+        return self.get_vertex_level(vertex) == len(self.levels) - 1
+
+    def get_vertex_level(self, vertex: int):
+        if not self.levels_valid:
+            self.initialize_vertex_to_level_map()
+        return self.vertex_to_level_map[vertex]
 
     def get_top_level_vertices(self) -> [int]:
         """!
@@ -392,8 +397,8 @@ class CoalescentTree(GenealogicalGraph):
         """!
         @brief Returns the root of the given clade.
         """
-        max_level_vertex = max(clade, key=lambda x: self.vertex_to_level_map[x])
-        max_level = self.vertex_to_level_map[max_level_vertex]
+        max_level_vertex = max(clade, key=lambda x: self.get_vertex_level(x))
+        max_level = self.get_vertex_level(max_level_vertex)
         root_vertices = [x for x in clade if x in self.get_levels()[max_level]]
         if len(root_vertices) != 1:
             raise Exception("Invalid clade value")
