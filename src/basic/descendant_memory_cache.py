@@ -4,7 +4,7 @@
 """
 
 
-from descendant_cache import DescendantCache
+from src.basic.descendant_cache import DescendantCache
 
 
 class DescendantMemoryCache(DescendantCache):

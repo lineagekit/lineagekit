@@ -60,7 +60,7 @@ class SimpleGraph:
         dfs(vertex)
         return component
 
-    def get_ascending_genealogy_from_vertices(self, vertices: [int]) -> {int}:
+    def get_ascending_graph_from_vertices(self, vertices: [int]) -> {int}:
         """!
         @brief This method returns all the vertices in the ascending genealogy for the given list of vertices.
         @param vertices The vertices for which the ascending genealogy should be calculated.
@@ -141,7 +141,10 @@ class SimpleGraph:
         if update_vertices:
             self.vertices.update((parent, child))
 
+    # TODO Add different methods for edges
+
     def add_vertex(self, vertex: int, exists_ok: bool = True):
+        # TODO: remove
         """!
         @brief Adds the given vertices to the graph.
         @param vertex The vertex to be added to the graph.
@@ -155,6 +158,7 @@ class SimpleGraph:
             raise ValueError("The specified vertices is already in the graph")
 
     def add_vertices(self, vertices: Sequence[int], exists_ok: bool = True):
+        # TODO: remove
         """!
         @brief Adds the given vertices to the graph.
         @param vertices The vertices to be added to the graph.
@@ -173,6 +177,15 @@ class SimpleGraph:
         """
         return len(self.vertices)
 
+    def verify_max_parents_number(self, max_parents_number: int) -> bool:
+        """!
+        @brief Returns whether every vertex has no more than the given max_parents_number parents.
+        """
+        for parents in self.parents_map.values():
+            if len(parents) > max_parents_number:
+                return False
+        return True
+
     @staticmethod
     def get_graph_from_tree(tree: Tree) -> SimpleGraph:
         """!
@@ -187,7 +200,8 @@ class SimpleGraph:
         return graph
 
     @staticmethod
-    def get_graph_from_file(filename: str, ploidy: int, missing_parent_notation=None, separation_symbol=' ') \
+    def get_graph_from_file(filename: str, ploidy: int, max_parent_number: int = 2,
+                            missing_parent_notation=None, separation_symbol=' ', skip_first_line: bool = False) \
             -> SimpleGraph:
         """!
         @brief Parses the genealogical graph from the file specified by the filename. The ploidy parameter specifies
@@ -196,31 +210,36 @@ class SimpleGraph:
         some metadata which is ignored by this class.
         @param filename The path to the file to be used. The file can optionally start with 1 comment line starting with
         the '#' symbol.
+        @param max_parent_number The maximum number of parents an individual can posses.
+        The value must be either 1 or 2.
         @param ploidy: The number of ploids that an organism possesses. Must be either 1 or 2.
         @param separation_symbol The symbol used to separate the values in a line. By default, a space is used.
         @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
+        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
+        header does not start with a '#' symbol.
         If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
         @return The processed pedigree.
+
         """
-        if ploidy == 1:
-            if missing_parent_notation is not None:
-                raise ValueError("If the specified ploidy is 1, missing_parent_notation must be None, "
-                                 "as every vertex mentioned in the file must have a parent")
-        elif ploidy != 2:
+        if ploidy != 1 and ploidy != 2:
             raise Exception(f"The ploidy must be either 1 or 2, found {ploidy} specified")
         pedigree: SimpleGraph = SimpleGraph()
 
         def process_line(file_line: str):
             if ploidy == 1:
-                pedigree.add_haploid_line(file_line, separation_symbol)
+                pedigree.add_haploid_line(line=file_line, max_parent_number=max_parent_number,
+                                          missing_parent_notation=missing_parent_notation,
+                                          separation_symbol=separation_symbol)
             else:
-                pedigree.add_line_from_pedigree(file_line, missing_parent_notation, separation_symbol)
+                pedigree.add_line_from_pedigree(line=file_line,
+                                                max_parent_number=max_parent_number,
+                                                missing_parent_notation=missing_parent_notation,
+                                                separation_symbol=separation_symbol)
 
         file = open(filename, 'r')
         lines = file.readlines()
-        if not lines[0].__contains__('#'):
-            process_line(lines[0])
-        lines.pop(0)
+        if skip_first_line or lines[0].__contains__('#'):
+            lines.pop(0)
         for line in lines:
             process_line(line)
         file.close()
@@ -229,39 +248,67 @@ class SimpleGraph:
         return pedigree
 
     @staticmethod
-    def get_haploid_graph_from_file(filename: str, separation_symbol=' ') -> SimpleGraph:
+    def get_haploid_graph_from_file(filename: str, max_parent_number: int = 2,
+                                    missing_parent_notation=None, separation_symbol=' ',
+                                    skip_first_line: bool = False) -> SimpleGraph:
         """!
         @brief This method processes the input graph considering that every individual is diploid.
         """
-        return SimpleGraph.get_graph_from_file(filename=filename, ploidy=1, separation_symbol=separation_symbol)
+        return SimpleGraph.get_graph_from_file(filename=filename, ploidy=1,
+                                               missing_parent_notation=missing_parent_notation,
+                                               separation_symbol=separation_symbol,
+                                               skip_first_line=skip_first_line)
 
     @staticmethod
-    def get_diploid_graph_from_file(filename, missing_parent_notation=None, separation_symbol=' ') -> SimpleGraph:
+    def get_diploid_graph_from_file(filename: str, max_parent_number: int = 2,
+                                    missing_parent_notation=None, separation_symbol=' ',
+                                    skip_first_line: bool = False) -> SimpleGraph:
         """!
         @brief Parses the pedigree from the file specified by the filename. Every individual is treated as a diploid
         organism.
+        @param max_parent_number The maximum number of parents an individual can posses.
+        The value must be either 1 or 2.
         @param filename The path to the file to be used. The file can optionally start with 1 comment line starting with
         the '#' symbol.
         @param separation_symbol The symbol used to separate the values in a line. By default, a space is used.
         @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
         If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
+        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
+        header does not start with a '#' symbol.
         @return The processed pedigree.
         """
         return SimpleGraph.get_graph_from_file(filename=filename, ploidy=2,
+                                               max_parent_number=max_parent_number,
                                                missing_parent_notation=missing_parent_notation,
-                                               separation_symbol=separation_symbol)
+                                               separation_symbol=separation_symbol,
+                                               skip_first_line=skip_first_line)
 
-    def add_haploid_line(self, line: str, separation_symbol=' '):
+    @staticmethod
+    def parse_line(line: str, max_parent_number: int, missing_parent_notation: [str], separation_symbol=' '):
+        return list(map(lambda name: int(name) if name not in missing_parent_notation else name,
+                        line.strip('\n').split(separation_symbol)[:max_parent_number + 1]))
+
+    def add_haploid_line(self, line: str, max_parent_number: int, separation_symbol=' ', missing_parent_notation=None):
         """!
         @brief Processes the given line and updated the graph, treating every individual as haploid.
         """
+        if missing_parent_notation is None:
+            missing_parent_notation = ("-1", '.')
         try:
-            (child, parent) = list(map(lambda name: int(name), line.strip('\n').split(separation_symbol)))[:2]
+            child, *parents = SimpleGraph.parse_line(line=line,
+                                                     missing_parent_notation=missing_parent_notation,
+                                                     max_parent_number=max_parent_number,
+                                                     separation_symbol=separation_symbol)
         except ValueError:
             raise Exception("Invalid line")
-        self.add_edge(parent=parent, child=child)
+        if child in self.parents_map:
+            raise ValueError("The same individual is specified multiple times in the input file")
+        for parent in parents:
+            if parent not in missing_parent_notation:
+                self.add_edge(parent=parent, child=child)
 
-    def add_line_from_pedigree(self, line: str, missing_parent_notation=None, separation_symbol=' '):
+    def add_line_from_pedigree(self, line: str, max_parent_number: int,
+                               missing_parent_notation=None, separation_symbol=' '):
         """!
         @brief This function processes a single line from a pedigree and updates the graph accordingly.
         It treats every id as a diploid individual, so if the individual's id is x, then the resulting graph
@@ -276,12 +323,16 @@ class SimpleGraph:
         @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
         If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
         @param separation_symbol: The symbol used to separate the integers in the line. By default, a space is used.
+        @param max_parent_number The maximum number of parents a vertex can have. Must be either 1 or 2
         """
         if missing_parent_notation is None:
             missing_parent_notation = ("-1", '.')
-        (child, mother, father) = list(map(lambda name: str(name), line.strip('\n').split(separation_symbol)))[:3]
+        child, *parents = SimpleGraph.parse_line(line=line,
+                                                 missing_parent_notation=missing_parent_notation,
+                                                 max_parent_number=max_parent_number,
+                                                 separation_symbol=separation_symbol)
         child_ploid = 2 * int(child)
-        for parent in (mother, father):
+        for parent in parents:
             if parent not in missing_parent_notation:
                 if child_ploid in self.parents_map:
                     raise ValueError("The same individual is specified multiple times in the input file")

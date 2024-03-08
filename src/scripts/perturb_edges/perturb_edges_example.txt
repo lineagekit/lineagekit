@@ -1,0 +1,8 @@
+ind;father;mother;sex;ego_cag;ego_genizon;datemp;saisonmp;lieump;datem;monthmp;saisonm;lieum;monthm
+1;6;7;;;;;;;;;;;
+2;6;7;;;;;;;;;;;
+3;8;;;;;;;;;;;;
+4;8;;;;;;;;;;;;
+5;;8;;;;;;;;;;;
+6;10;11;;;;;;;;;;;
+8;10;11;;;;;;;;;;;

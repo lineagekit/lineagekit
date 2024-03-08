@@ -12,8 +12,8 @@ import warnings
 import networkx as nx
 from matplotlib import pyplot as plt
 
-from descendant_memory_cache import DescendantMemoryCache
-from simple_graph import *
+from src.basic.descendant_memory_cache import DescendantMemoryCache
+from src.basic.simple_graph import *
 
 
 class GenealogicalGraph(SimpleGraph):
@@ -31,6 +31,7 @@ class GenealogicalGraph(SimpleGraph):
         else:
             self.parents_map = pedigree.parents_map
             self.children_map = pedigree.children_map
+            self.vertices = pedigree.vertices
         if probands is None:
             probands = {x for x in self.parents_map if x not in self.children_map}
         self.probands = probands
@@ -129,6 +130,12 @@ class GenealogicalGraph(SimpleGraph):
             self.descendants_valid = True
         return self.descendant_writer.get_vertex_descendants(vertex_id)
 
+    def is_founder(self, vertex: int):
+        """!
+        @brief Returns whether the vertex belongs to the top level of the graph
+        """
+        return self.vertex_to_level_map[vertex] == len(self.levels) - 1
+
     def get_top_level_vertices(self) -> [int]:
         """!
         @brief Returns the vertices at the top level of the graph.
@@ -189,7 +196,7 @@ class GenealogicalGraph(SimpleGraph):
         @brief Returns the ascending genealogy for the given list of vertices ordered by levels.
         @param vertices The vertices for which the ascending genealogy should be calculated.
         """
-        ascending_genealogy = self.get_ascending_genealogy_from_vertices(vertices)
+        ascending_genealogy = self.get_ascending_graph_from_vertices(vertices)
         return [[x for x in level if x in ascending_genealogy] for level in self.get_levels()]
 
     def write_levels_as_diploid(self, file, levels: [[int]]):
@@ -282,7 +289,8 @@ class GenealogicalGraph(SimpleGraph):
     def process_level_vertex(self, parent: int, child: int, level: int) -> int:
         """!
         @brief Processes the given parent-child relationship at the given level and stores the results. This method is
-        an additional callback that is called within the process_descendant_map method which can be overridden by a child
+        an additional callback that is called within the process_descendant_map method which can be
+        overridden by a child
         class for implementing additional level-by-level processing behaviour.
         @param parent The parent vertex.
         @param child The child vertex.
@@ -294,27 +302,58 @@ class GenealogicalGraph(SimpleGraph):
 
     def process_proband_vertex(self, proband: int):
         """! @brief This method is an additional callback that is called within the process_descendant_map method which
-             can be overridden by a childclass for implementing additional level-by-level processing behaviour.
+             can be overridden by a child class for implementing additional level-by-level processing behaviour.
              @param proband The proband vertex
         """
         # Default behaviour
         self.descendant_writer.record_proband(proband)
 
     @staticmethod
-    def get_genealogical_graph_from_file(filename: str, missing_parent_notation=None, separation_symbol=' ') \
-            -> GenealogicalGraph:
+    def get_diploid_graph_from_file(filename: str, max_parent_number: int = 2,
+                                    missing_parent_notation=None, separation_symbol=' ',
+                                    skip_first_line: bool = False) -> GenealogicalGraph:
         """!
-        @brief Utility function that can be used for getting a genealogical graph from a file.
+        @brief Utility function that can be used for getting a diploid genealogical graph from a file.
         @param filename The filename from which the graph will be read.
+        @param max_parent_number The maximum number of parents an individual can posses.
+        The value must be either 1 or 2.
         @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
         Refer to the documentation for SimpleGraph.get_graph_from_file
         @param separation_symbol The separation sequence used in the file. Refer to the documentation for
         SimpleGraph.get_graph_from_file
-        @returns
+        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
+        header does not start with a '#' symbol.
+        @returns The parsed graph.
         """
-        pedigree: SimpleGraph = SimpleGraph.get_diploid_graph_from_file(filename,
+        pedigree: SimpleGraph = SimpleGraph.get_diploid_graph_from_file(filename=filename,
+                                                                        max_parent_number=max_parent_number,
                                                                         missing_parent_notation=missing_parent_notation,
-                                                                        separation_symbol=separation_symbol)
+                                                                        separation_symbol=separation_symbol,
+                                                                        skip_first_line=skip_first_line)
+        return GenealogicalGraph(pedigree=pedigree)
+
+    @staticmethod
+    def get_haploid_graph_from_file(filename: str, max_parent_number: int = 2,
+                                    missing_parent_notation=None, separation_symbol=' ',
+                                    skip_first_line: bool = False) -> GenealogicalGraph:
+        """!
+        @brief Utility function that can be used for getting a haploid genealogical graph from a file.
+        @param filename The filename from which the graph will be read.
+        @param max_parent_number The maximum number of parents an individual can posses.
+        The value must be either 1 or 2.
+        @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
+        Refer to the documentation for SimpleGraph.get_graph_from_file
+        @param separation_symbol The separation sequence used in the file. Refer to the documentation for
+        SimpleGraph.get_graph_from_file
+        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
+        header does not start with a '#' symbol.
+        @returns The parsed graph.
+        """
+        pedigree: SimpleGraph = SimpleGraph.get_haploid_graph_from_file(filename=filename,
+                                                                        max_parent_number=max_parent_number,
+                                                                        missing_parent_notation=missing_parent_notation,
+                                                                        separation_symbol=separation_symbol,
+                                                                        skip_first_line=skip_first_line)
         return GenealogicalGraph(pedigree=pedigree)
 
 
@@ -397,7 +436,7 @@ class CoalescentTree(GenealogicalGraph):
     def write_levels(self, file, levels):
         """!
         @brief Writes the given levels to a file.
-        @param The file to which the levels will be written to.
+        @param file The file to which the levels will be written to.
         @param levels The levels to be saved.
         """
         for level in levels:
