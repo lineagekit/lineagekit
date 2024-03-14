@@ -232,9 +232,11 @@ class GenGraph(nx.DiGraph):
         @brief This method returns all the vertices in the ascending genealogy for the given list of vertices.
         @param vertices The vertices for which the ascending genealogy should be calculated.
         """
-        result = set(vertices)
+        result = set()
         for vertex in vertices:
-            result.update(nx.ancestors(self, vertex))
+            if vertex in self.nodes:
+                result.add(vertex)
+                result.update(nx.ancestors(self, vertex))
         return result
 
     def get_connected_component_for_vertex(self, vertex: int) -> [int]:

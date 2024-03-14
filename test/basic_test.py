@@ -107,6 +107,11 @@ def test_subgraph_consistency(simple_1):
                                                  f" got {simple_1.get_vertices_number()} vertices instead")
 
 
+def test_ascending_genealogy_does_not_throw_exceptions_for_non_existing_vertices(simple_1_haploid):
+    ascending_genealogy = simple_1_haploid.get_ascending_graph_from_vertices([-1, -12123, 1, 2])
+    assert set(ascending_genealogy) == {1, 2, 6, 7, 10, 11}
+
+
 def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, simple_1_missing_parent_notation):
     filepath = f"{test_pedigrees}/simple_1.txt"
     missing_parent_notation = simple_1_missing_parent_notation
@@ -185,6 +190,7 @@ def test_ascending_genealogy_reduction(simple_1_haploid):
     graph = simple_1_haploid
     graph.reduce_to_ascending_genealogy([1, 3])
     assert set(graph.nodes()) == {1, 6, 7, 10, 11, 3, 8, 9}
+    assert graph.get_children(8) == [3]
     graph.reduce_to_ascending_genealogy([1])
     assert set(graph.nodes()) == {1, 6, 7, 10, 11}
 
@@ -267,3 +273,4 @@ def test_levels_assignment(simple_1_haploid):
         assert graph.get_vertex_level(vertex) == level
     assert graph.is_founder(7)
     assert graph.is_founder(9)
+
