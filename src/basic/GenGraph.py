@@ -3,6 +3,7 @@ from __future__ import annotations
 import itertools
 
 import networkx as nx
+import pandas as pd
 from tskit import Tree
 import warnings
 from typing import Iterable
@@ -491,3 +492,20 @@ class GenGraph(nx.DiGraph):
                 self.add_edge(child=child_ploid, parent=2 * parent)
                 self.add_edge(child=child_ploid, parent=2 * parent + 1)
                 child_ploid += 1
+                
+    def to_DataFrame(self):
+        """Convert a GenGraph object to a DataFrame. Formatted for workflows with libraries such as sgkit."""
+        data = []
+        for vertex in self.nodes:
+            # Use predecessors to get parents (assuming the first parent is the sire and the second is the dam)
+            parents = list(self.predecessors(vertex))[:2]
+            # Ensure two entries for parents, filling missing values with "."
+            while len(parents) < 2:
+                parents.append(".")
+            # Add the vertex and its parents to the data list
+            data.append([vertex] + parents)
+        
+        df = pd.DataFrame(data, columns=["ID", "SIRE", "DAM"])
+        # Replace missing parent indicators as needed to align with sgkit
+        df.replace({"" : ".", None: "."}, inplace=True)
+        return df
