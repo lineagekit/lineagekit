@@ -1,7 +1,8 @@
 import os
 import sys
+
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../.."))
-from src.basic.genealogical_graph import *
+from src.basic.GenGraph import *
 
 
 def get_file_path(input_request: str):
@@ -16,8 +17,8 @@ def get_file_path(input_request: str):
 
 
 filepath = get_file_path("Specify the path to the pedigree:")
-pedigree = GenealogicalGraph.get_haploid_graph_from_file(filename=filepath, separation_symbol=";",
-                                                         missing_parent_notation=[""], skip_first_line=True)
+pedigree = GenGraph.get_haploid_graph_from_file(filepath=filepath, separation_symbol=";",
+                                                missing_parent_notation=[""], skip_first_line=True)
 # Get the ascending genealogy grouped by levels
 ascending_genealogy_by_levels = pedigree.get_ascending_genealogy_from_vertices_by_levels(vertices=[2, 3])
 # Alternatively, just get all the vertices in the ascending genealogy
