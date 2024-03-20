@@ -5,6 +5,9 @@ import networkx
 import pytest
 import os
 from src.basic.GenGraph import GenGraph
+from src.basic.Pedigree import Pedigree
+from src.basic.PloidPedigree import PloidPedigree
+from src.basic.CoalescentTree import CoalescentTree
 
 
 @pytest.fixture
@@ -18,49 +21,71 @@ def simple_1_missing_parent_notation():
 
 
 @pytest.fixture
-def parse_simple_1(test_pedigrees, simple_1_missing_parent_notation) -> GenGraph:
+def parse_simple_1(test_pedigrees, simple_1_missing_parent_notation) -> PloidPedigree:
     filepath = f"{test_pedigrees}/simple_1.txt"
 
-    return GenGraph.get_diploid_graph_from_file(filepath=filepath,
-                                                missing_parent_notation=simple_1_missing_parent_notation)
+    return PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath,
+                                                      missing_parent_notation=simple_1_missing_parent_notation)
 
 
 @pytest.fixture
-def parse_simple_1_haploid(test_pedigrees, simple_1_missing_parent_notation) -> GenGraph:
+def parse_simple_1_haploid(test_pedigrees, simple_1_missing_parent_notation) -> Pedigree:
     filepath = f"{test_pedigrees}/simple_1.txt"
 
-    return GenGraph.get_haploid_graph_from_file(filepath=filepath,
-                                                missing_parent_notation=simple_1_missing_parent_notation)
+    return Pedigree.get_pedigree_graph_from_file(filepath=filepath,
+                                                 missing_parent_notation=simple_1_missing_parent_notation)
 
 
 @pytest.fixture
 def parse_simple_1_haploid_ascending_proband() -> Iterable[int]:
-    return 1, 3
+    return 1, 3, -123123
 
 
 @pytest.fixture
 def parse_simple_1_haploid_ascending(test_pedigrees, parse_simple_1_haploid_ascending_proband,
-                                     simple_1_missing_parent_notation) -> GenGraph:
+                                     simple_1_missing_parent_notation) -> Pedigree:
     filepath = f"{test_pedigrees}/simple_1.txt"
 
-    return GenGraph.get_haploid_graph_from_file(filepath=filepath,
-                                                probands=parse_simple_1_haploid_ascending_proband,
-                                                missing_parent_notation=simple_1_missing_parent_notation)
+    return Pedigree.get_pedigree_graph_from_file(filepath=filepath,
+                                                 probands=parse_simple_1_haploid_ascending_proband,
+                                                 missing_parent_notation=simple_1_missing_parent_notation)
 
 
 @pytest.fixture
-def simple_1(parse_simple_1) -> GenGraph:
+def simple_1(parse_simple_1) -> PloidPedigree:
     return parse_simple_1.copy()
 
 
 @pytest.fixture
-def simple_1_haploid(parse_simple_1_haploid) -> GenGraph:
+def simple_1_haploid(parse_simple_1_haploid) -> Pedigree:
     return parse_simple_1_haploid.copy()
 
 
 @pytest.fixture
-def simple_1_haploid_ascending(parse_simple_1_haploid_ascending) -> GenGraph:
+def simple_1_haploid_ascending(parse_simple_1_haploid_ascending) -> Pedigree:
     return parse_simple_1_haploid_ascending.copy()
+
+
+@pytest.fixture
+def parse_coalescent_tree_1(test_pedigrees) -> CoalescentTree:
+    filepath = f"{test_pedigrees}/coalescent_tree_1.txt"
+    return CoalescentTree.get_coalescent_tree_from_file(filepath=filepath)
+
+
+@pytest.fixture
+def coalescent_tree_1(parse_coalescent_tree_1) -> CoalescentTree:
+    return parse_coalescent_tree_1.copy()
+
+
+@pytest.fixture
+def parse_coalescent_tree_2(test_pedigrees) -> CoalescentTree:
+    filepath = f"{test_pedigrees}/coalescent_tree_2.txt"
+    return CoalescentTree.get_coalescent_tree_from_file(filepath=filepath)
+
+
+@pytest.fixture
+def coalescent_tree_2(parse_coalescent_tree_2) -> CoalescentTree:
+    return parse_coalescent_tree_2.copy()
 
 
 def two_parents_defined_correctly(graph: GenGraph, child: int, first_parent: int, second_parent: int) -> bool:
@@ -227,7 +252,7 @@ def test_connected_components(simple_1_haploid):
 
 def haploid_child_parent_relationship_consistent(graph: GenGraph, child: int, parent: int):
     return parent in graph.get_parents(child) and child in graph.get_children(parent) \
-            and graph.is_parent(parent=parent, child=child)
+        and graph.is_parent(parent=parent, child=child)
 
 
 def test_ploid_parsing(test_pedigrees, simple_1_missing_parent_notation, simple_1_haploid):
@@ -274,3 +299,70 @@ def test_levels_assignment(simple_1_haploid):
     assert graph.is_founder(7)
     assert graph.is_founder(9)
 
+
+def test_saving_to_file(simple_1_haploid, simple_1_missing_parent_notation):
+    graph = simple_1_haploid
+    filepath = "test.txt"
+    graph.save_to_file("test.txt", separator=" ;", missing_parent_notation="!")
+    assert os.path.exists(filepath)
+    try:
+        parsed_graph = Pedigree.get_graph_from_file(filepath=filepath,
+                                                    separation_symbol=" ;",
+                                                    missing_parent_notation=["!"])
+    except Exception:
+        os.remove(filepath)
+        pytest.fail("Could not parse the saved file")
+
+    assert networkx.is_isomorphic(graph, parsed_graph)
+    os.remove(filepath)
+
+
+def test_saving_as_diploid(simple_1):
+    filepath = "test.txt"
+    simple_1.save_as_diploid(filepath=filepath)
+    try:
+        parsed_simple_1 = PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath)
+    except Exception:
+        os.remove(filepath)
+        pytest.fail("Could not parse the saved file")
+    assert networkx.is_isomorphic(simple_1, parsed_simple_1)
+    os.remove(filepath)
+    individuals_ids = frozenset([1, 3, 4])
+    ploid_ids = PloidPedigree.get_ploids_from_individual_ids(individuals_ids)
+    assert {2, 3, 6, 7, 8, 9} == frozenset(ploid_ids)
+    assert frozenset(PloidPedigree.get_individual_ids_from_ploids(ploid_ids)) == individuals_ids
+    simple_1.save_ascending_genealogy_as_diploid(filepath=filepath, vertices=ploid_ids)
+    simple_1.reduce_to_ascending_genealogy(ploid_ids)
+    try:
+        parsed_graph = PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath)
+    except Exception:
+        os.remove(filepath)
+        pytest.fail("Could not parse the saved file")
+    assert networkx.is_isomorphic(simple_1, parsed_graph)
+    os.remove(filepath)
+
+
+def test_coalescent_tree_parsing(coalescent_tree_1):
+    assert len(coalescent_tree_1.nodes) == 8
+    assert coalescent_tree_1.get_root_for_clade(coalescent_tree_1.nodes) == 8
+    copy_tree = coalescent_tree_1.copy()
+    coalescent_tree_1.remove_unary_nodes()
+    assert networkx.is_isomorphic(copy_tree, coalescent_tree_1)
+    assert (frozenset(coalescent_tree_1.get_largest_clade_by_size()) ==
+            frozenset(coalescent_tree_1.get_largest_clade_by_probands()))
+
+
+def test_coalescent_tree_2(coalescent_tree_2):
+    largest_clade_by_size = coalescent_tree_2.get_largest_clade_by_size()
+    assert frozenset(largest_clade_by_size) == frozenset(range(1, 9))
+    largest_clade_by_probands = coalescent_tree_2.get_largest_clade_by_probands()
+    assert frozenset(largest_clade_by_probands) == frozenset(range(9, 13))
+    assert coalescent_tree_2.get_root_for_clade(largest_clade_by_size) == 8
+    assert coalescent_tree_2.get_root_for_clade(largest_clade_by_probands) == 12
+    coalescent_tree_2.remove_unary_nodes()
+    assert coalescent_tree_2.get_parents(1) == [8]
+    assert coalescent_tree_2.get_parents(2) == [8]
+    for removed_vertex in range(3, 8):
+        assert removed_vertex not in coalescent_tree_2
+    largest_clade_by_size_new = coalescent_tree_2.get_largest_clade_by_size()
+    assert frozenset(largest_clade_by_size_new) == frozenset(largest_clade_by_probands)

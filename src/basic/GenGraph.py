@@ -5,12 +5,13 @@ import itertools
 import networkx as nx
 from tskit import Tree
 import warnings
-from typing import Iterable
+from typing import Iterable, Callable, TextIO
 
 
 class GenGraph(nx.DiGraph):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, parent_number: int = 2, *args, **kwargs):
         super(GenGraph, self).__init__(*args, **kwargs)
+        self.parent_number = parent_number
         self.vertex_to_level_map = dict()
         self.levels = []
         self.levels_valid = False
@@ -273,60 +274,10 @@ class GenGraph(nx.DiGraph):
     def reduce_to_ascending_genealogy(self, probands: Iterable[int]):
         """!
         @brief Reduces the given graph, so that only the information for the ascending genealogy for the given
-        probands.
+        probands remains in the end.
         """
         ascending_genealogy = self.get_ascending_graph_from_vertices(probands)
         self.remove_nodes_from(set(self.nodes()).difference(ascending_genealogy))
-
-    def write_levels_as_diploid(self, file, levels: [[int]]):
-        """!
-        @brief Writes the given levels of the graph to a file. Assumes that the graph vertices represent ploids, and
-        saves the corresponding individuals (diploid organisms) to the file.
-        @param file The file to which the content should be written.
-        @param levels The levels that should be written to the file.
-        """
-        processed_ids = set()
-        for level in levels:
-            for vertex in level:
-                vertex_id = vertex // 2
-                if vertex_id in processed_ids:
-                    continue
-                else:
-                    processed_ids.add(vertex_id)
-                [first_parent_id, second_parent_id] = [-1, -1]
-                if self.has_parents(vertex):
-                    ploid_id = 2 * vertex_id
-                    parents = self.get_parents(ploid_id)
-                    if parents:
-                        [first_parent, _] = parents
-                        first_parent_id = first_parent // 2
-                    ploid_id += 1
-                    parents = self.get_parents(ploid_id)
-                    if parents:
-                        [second_parent, _] = parents
-                        second_parent_id = second_parent // 2
-                file.write(f"{vertex_id} {first_parent_id} {second_parent_id}\n")
-
-    def save_ascending_genealogy_as_diploid(self, filepath: str, vertices: Iterable[int]):
-        """!
-        @brief Saves the ascending genealogy for the given list of vertices
-        treating every vertex as a ploid of a diploid organism.
-        @param filepath The path to the file.
-        @param vertices The vertices for which the ascending genealogy should be saved.
-        """
-        levels = self.get_ascending_genealogy_from_vertices_by_levels(vertices)
-        file = open(filepath, 'w')
-        self.write_levels_as_diploid(file, levels)
-        file.close()
-
-    def save_as_diploid(self, filepath: str):
-        """!
-        @brief Saves the graph treating every vertex as a ploid of a diploid organism.
-        @param filepath The path to the file to be written to.
-        """
-        file = open(filepath, 'w')
-        self.write_levels_as_diploid(file, self.get_levels())
-        file.close()
 
     @staticmethod
     def get_graph_from_tree(tree: Tree, probands: Iterable[int] = None) -> GenGraph:
@@ -340,94 +291,37 @@ class GenGraph(nx.DiGraph):
         return result_graph
 
     @staticmethod
-    def get_graph_from_file(filepath: str, ploidy: int, max_parent_number: int = 2, probands: Iterable[int] = None,
+    def get_graph_from_file(filepath: str, parent_number: int = 2, probands: Iterable[int] = None,
                             missing_parent_notation=None, separation_symbol=' ', skip_first_line: bool = False) \
             -> GenGraph:
         """!
-        @brief Parses the genealogical graph from the file specified by the path. The ploidy parameter specifies
-        whether the organisms in the file should be treated as haploid or diploid.
-        Notice that the every line of the file must contain at least ploidy + 1 ids, but it can optionally have
-        some metadata which is ignored by this class.
+        @brief Parses the genealogical graph from the file specified by the path.
+        Notice that the every line of the file must contain at most max_parent_number + 1 ids, but it can
+        optionally have some metadata which is ignored by this class.
         @param filepath The path to the file to be used. The file can optionally start with 1 comment line starting with
         the '#' symbol.
-        @param max_parent_number The maximum number of parents an individual can posses.
-        The value must be either 1 or 2.
-        @param probands The probands for which the ascending genealogy should be calculated. By default, all the vertices
-        from the input file are stored
-        @param ploidy: The number of ploids that an organism possesses. Must be either 1 or 2.
+        @param parent_number The maximum number of parents an individual can posses.
+        @param probands The probands for which the ascending genealogy should be calculated. By default, all the
+        vertices from the input file are stored
         @param separation_symbol The symbol used to separate the values in a line. By default, a space is used.
         @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
+        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
         @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
         header does not start with a '#' symbol.
-        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
         @return The processed pedigree.
-
         """
-        if ploidy != 1 and ploidy != 2:
-            raise Exception(f"The ploidy must be either 1 or 2, found {ploidy} specified")
-        pedigree: GenGraph = GenGraph()
+        pedigree: GenGraph = GenGraph(parent_number=parent_number)
 
         def process_line(file_line: str):
-            if ploidy == 1:
-                pedigree.add_haploid_line(line=file_line, max_parent_number=max_parent_number,
-                                          missing_parent_notation=missing_parent_notation,
-                                          separation_symbol=separation_symbol)
-            else:
-                pedigree.add_line_from_pedigree(line=file_line,
-                                                max_parent_number=max_parent_number,
-                                                missing_parent_notation=missing_parent_notation,
-                                                separation_symbol=separation_symbol)
+            pedigree.add_haploid_line(line=file_line, max_parent_number=parent_number,
+                                      missing_parent_notation=missing_parent_notation,
+                                      separation_symbol=separation_symbol)
 
-        with open(filepath, 'r') as file:
-            first_line = file.readline()
-            if not skip_first_line and not first_line.__contains__('#'):
-                process_line(first_line)
-            for line in file:
-                process_line(line)
-        file.close()
+        pedigree._read_file_and_parse_lines(filepath=filepath, skip_first_line=skip_first_line,
+                                            parse_operation=process_line)
         if probands is not None:
             pedigree.reduce_to_ascending_genealogy(probands=probands)
         return pedigree
-
-    @staticmethod
-    def get_haploid_graph_from_file(filepath: str, max_parent_number: int = 2, probands: Iterable[int] = None,
-                                    missing_parent_notation=None, separation_symbol=' ',
-                                    skip_first_line: bool = False) -> GenGraph:
-        """!
-        @brief This method processes the input graph considering that every individual is diploid.
-        """
-        return GenGraph.get_graph_from_file(filepath=filepath, ploidy=1,
-                                            probands=probands,
-                                            max_parent_number=max_parent_number,
-                                            missing_parent_notation=missing_parent_notation,
-                                            separation_symbol=separation_symbol,
-                                            skip_first_line=skip_first_line)
-
-    @staticmethod
-    def get_diploid_graph_from_file(filepath: str, max_parent_number: int = 2, probands: Iterable[int] = None,
-                                    missing_parent_notation=None, separation_symbol=' ',
-                                    skip_first_line: bool = False) -> GenGraph:
-        """!
-        @brief Parses the pedigree from the file specified by the filename. Every individual is treated as a diploid
-        organism.
-        @param max_parent_number The maximum number of parents an individual can posses.
-        The value must be either 1 or 2.
-        @param probands The probands for which the ascending genealogy should be calculated. By default, all the vertices
-        from the input file are stored
-        @param filepath The path to the file to be used. The file can optionally start with 1 comment line starting with
-        the '#' symbol.
-        @param separation_symbol The symbol used to separate the values in a line. By default, a space is used.
-        @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
-        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
-        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
-        header does not start with a '#' symbol.
-        @return The processed pedigree.
-        """
-        return GenGraph.get_graph_from_file(filepath=filepath, ploidy=2, probands=probands,
-                                            max_parent_number=max_parent_number,
-                                            missing_parent_notation=missing_parent_notation,
-                                            separation_symbol=separation_symbol,
-                                            skip_first_line=skip_first_line)
 
     @staticmethod
     def parse_line(line: str, max_parent_number: int, missing_parent_notation: [str], separation_symbol=' '):
@@ -438,6 +332,17 @@ class GenGraph(nx.DiGraph):
         self.remove_edges_to_parents(vertex)
         warnings.warn(f"Individual {vertex} is specified multiple times in the graph."
                       f"The previous parents are {self.get_parents(vertex)}, new values: {new_parents}", UserWarning)
+
+    @staticmethod
+    def _read_file_and_parse_lines(filepath: str, skip_first_line: bool,
+                                   parse_operation: Callable[[str], None]):
+        with open(filepath, 'r') as file:
+            first_line = file.readline()
+            if not skip_first_line and not first_line.__contains__('#'):
+                parse_operation(first_line)
+            for line in file:
+                parse_operation(line)
+        file.close()
 
     def add_haploid_line(self, line: str, max_parent_number: int, separation_symbol=' ', missing_parent_notation=None):
         """!
@@ -458,36 +363,22 @@ class GenGraph(nx.DiGraph):
             if parent not in missing_parent_notation:
                 self.add_edge(child=child, parent=parent)
 
-    def add_line_from_pedigree(self, line: str, max_parent_number: int,
-                               missing_parent_notation=None, separation_symbol=' '):
+    def save_to_file(self, filename: str, separator: str = ' ', missing_parent_notation: str = "-1"):
         """!
-        @brief This function processes a single line from a pedigree and updates the graph accordingly.
-        It treats every id as a diploid individual, so if the individual's id is x, then the resulting graph
-        will have two vertices 2 * x and 2 * x + 1 for their ploids. If you want to find the individual id by its ploid,
-        you can use integer division and divide the id by 2.
-        For example, if the given line is "1 2 3" (representing that the individual with id 1 has two parents with
-        ids 2 and 3), then the resulting graph will have the following information:
-        parents_map[2] = 4, 5
-        parents_map[3] = 6, 7
-        @param line The line to be parsed. The line must consists of at least three integer values separated by
-        the separation symbol.
-        @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
-        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
-        @param separation_symbol: The symbol used to separate the integers in the line. By default, a space is used.
-        @param max_parent_number The maximum number of parents a vertex can have. Must be either 1 or 2
+        @brief
         """
-        if missing_parent_notation is None:
-            missing_parent_notation = ("-1", '.')
-        child, *parents = GenGraph.parse_line(line=line,
-                                              missing_parent_notation=missing_parent_notation,
-                                              max_parent_number=max_parent_number,
-                                              separation_symbol=separation_symbol)
-        child_ploid = 2 * int(child)
-        if child_ploid in self and self.has_parents(child_ploid):
-            self._on_multiple_vertex_definition(vertex=child_ploid, new_parents=parents)
-        for parent in parents:
-            if parent not in missing_parent_notation:
-                parent = int(parent)
-                self.add_edge(child=child_ploid, parent=2 * parent)
-                self.add_edge(child=child_ploid, parent=2 * parent + 1)
-                child_ploid += 1
+        file = open(filename, 'w')
+        self._save_graph_to_file(file=file, separator=separator, missing_parent_notation=missing_parent_notation)
+        file.close()
+
+    def _save_graph_to_file(self, file: TextIO, separator: str = ' ', missing_parent_notation: str = "-1"):
+        """!
+        @brief
+        """
+        for vertex in self.nodes:
+            parents = self.get_parents(vertex)
+            vertices_to_write = [vertex] + parents
+            vertices_to_write = [str(vertex) for vertex in vertices_to_write]
+            if missing_parent_notation is not None and len(parents) < self.parent_number:
+                vertices_to_write += [missing_parent_notation] * (self.parent_number - len(parents))
+            file.write(f"{separator.join(vertices_to_write)}\n")
