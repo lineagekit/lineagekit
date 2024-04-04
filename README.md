@@ -4,7 +4,7 @@ A python library with genealogy methods. We will seek to integrate code or funct
 ## ISGEN (Dominic's code on importance sampling)
 https://github.com/DomNelson/ISGen
 
-## genlib (Marie-Hélène Roy-Gagnon's R pacakge. 
+## genlib (Marie-Hélène Roy-Gagnon's R package). 
 
 ## Andrii's aligner
 
