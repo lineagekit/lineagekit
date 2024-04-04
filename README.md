@@ -12,7 +12,7 @@ https://github.com/DomNelson/ISGen
 
 ## sgkit
 
-# Development policy {#development-policy}
+# [Development policy](#development-policy)
 
 If you want to contribute to this project, follow these steps:
 
