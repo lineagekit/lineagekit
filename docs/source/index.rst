@@ -25,5 +25,12 @@ Contents
 
 **Getting started**
 
+==================
+Development policy
+==================
+
+If you would like to contribute to the project, or if you have found a certain issue with the code,
+refer to our `development policy <https://github.com/lineagekit/lineagekit>`_ for more information.
+
 :ref:`quickstart`
 
