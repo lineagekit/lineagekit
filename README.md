@@ -27,3 +27,6 @@ existing code, try to create a test case for which the old version of the code d
 
 If you would like to request a certain change in the code, or if you have found a bug / unexpected behaviour,
 you can just create an issue with the corresponding description. 
+
+# [Documentation](#documentaion)
+You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/)
