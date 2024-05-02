@@ -81,6 +81,7 @@ class PloidPedigree(GenGraph):
         @param file The file to which the content should be written.
         @param levels The levels that should be written to the file.
         """
+        # TODO: Refactor the code to avoid code duplication
         processed_ids = set()
         for level in levels:
             for vertex in level:
@@ -92,15 +93,21 @@ class PloidPedigree(GenGraph):
                 [first_parent_id, second_parent_id] = [-1, -1]
                 if self.has_parents(vertex):
                     ploid_id = 2 * vertex_id
-                    parents = self.get_parents(ploid_id)
-                    if parents:
-                        [first_parent, _] = parents
-                        first_parent_id = first_parent // 2
+                    if ploid_id in self:
+                        parents = self.get_parents(ploid_id)
+                        if len(parents) == 2:
+                            [first_parent, _] = parents
+                            first_parent_id = first_parent // 2
+                        else:
+                            print(f"{ploid_id} is in the graph, but has no parents\n")
                     ploid_id += 1
-                    parents = self.get_parents(ploid_id)
-                    if parents:
-                        [second_parent, _] = parents
-                        second_parent_id = second_parent // 2
+                    if ploid_id in self:
+                        parents = self.get_parents(ploid_id)
+                        if len(parents) == 2:
+                            [second_parent, _] = parents
+                            second_parent_id = second_parent // 2
+                        else:
+                            print(f"{ploid_id} is in the graph, but has no parents\n")
                 file.write(f"{vertex_id} {first_parent_id} {second_parent_id}\n")
 
     def save_ascending_genealogy_as_diploid(self, filepath: str, vertices: Iterable[int]):

@@ -6,6 +6,7 @@ class CoalescentTree(GenGraph):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.parent_number = 1
 
     def get_largest_clade_by_size(self) -> [int]:
         """!

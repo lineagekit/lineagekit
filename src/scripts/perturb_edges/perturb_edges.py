@@ -1,21 +1,9 @@
-import os
 import sys
 
 from src.basic.Pedigree import Pedigree
+from src.utility.utility import *
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../.."))
-
-
-def get_file_path(input_request: str):
-    while True:
-        file_path = input(input_request)
-        if not os.path.exists(file_path):
-            print("The specified file does not exist, try again")
-        elif not os.path.isfile(file_path):
-            print("The specified path is not a file, try again")
-        else:
-            return file_path
-
 
 filepath = get_file_path("Specify the path to the pedigree:")
 pedigree = Pedigree.get_pedigree_graph_from_file(filepath=filepath, separation_symbol=";",
