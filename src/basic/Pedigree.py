@@ -1,15 +1,19 @@
 from __future__ import annotations
 
-import objsize
-from collections import defaultdict
-from typing import Iterable
 import heapq
+import itertools
+import math
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from typing import Iterable
 
 import numpy as np
 
 from src.basic.GenGraph import GenGraph
+import kinship
 
 numpy_one_half = np.float16(0.5)
+numpy_zero = np.float16(0)
 
 
 class Pedigree(GenGraph):
@@ -36,10 +40,8 @@ class Pedigree(GenGraph):
         return result
 
     def get_vertex_spouses(self, vertex: int):
-        spouses = set()
-        for child in self.get_children(vertex):
-            spouses.update(self.get_parents(child))
-        spouses.remove(vertex)
+        spouses = {parent for child in self.get_children(vertex) for parent in self.get_parents(child)}
+        spouses.discard(vertex)
         return spouses
 
     def get_vertex_parents_number_of_spouses(self, vertex: int) -> int:
@@ -53,6 +55,12 @@ class Pedigree(GenGraph):
         for vertex in vertices:
             parents.update(self.get_parents(vertex))
         return parents
+
+    def get_vertices_children(self, vertices: Iterable[int]):
+        children = set()
+        for vertex in vertices:
+            children.update(self.get_children(vertex))
+        return children
 
     def _calculate_self_kinship(self, kinship_matrix: np.ndarray, vertex: int, vertex_to_index: {int: int}):
         vertex_parents = self.get_parents(vertex)
@@ -95,11 +103,12 @@ class Pedigree(GenGraph):
         return vertex_to_index, kinship_matrix
 
     def _calculate_self_kinship_sparse(self, kinship_sparse_matrix: dict, vertex: int):
-        vertex_parents = self.get_parents(vertex)
+        # vertex_parents = self.get_parents(vertex)
+        vertex_parents = self._pred[vertex]
         if len(vertex_parents) != 2:
             kinship = numpy_one_half
         else:
-            [first_parent, second_parent] = vertex_parents
+            first_parent, second_parent = tuple(vertex_parents)
             kinship = np.float16((1 + kinship_sparse_matrix[first_parent][second_parent]) / 2)
         kinship_sparse_matrix[vertex][vertex] = kinship
 
@@ -115,9 +124,12 @@ class Pedigree(GenGraph):
 
     def _calculate_pair_kinship_sparse(self, kinship_sparse_matrix: dict, first_vertex: int, second_vertex: int):
         first_second_kinship_non_normalized = 0
-        for vertex_parent in self.get_parents(first_vertex):
+        for vertex_parent in self._pred[first_vertex]:
             first_second_kinship_non_normalized += kinship_sparse_matrix[second_vertex][vertex_parent]
         first_second_kinship = np.float16(first_second_kinship_non_normalized / 2)
+        # first_second_kinship = kinship.calculate_pair_kinship_sparse(kinship_sparse_matrix,
+        #                                                              tuple(self._pred[first_vertex]),
+        #                                                              second_vertex)
         kinship_sparse_matrix[first_vertex][second_vertex] = first_second_kinship
         kinship_sparse_matrix[second_vertex][first_vertex] = first_second_kinship
 
@@ -181,34 +193,61 @@ class Pedigree(GenGraph):
             kinship = 0.5
         else:
             [first_parent, second_parent] = [vertex_to_representative[x] for x in vertex_parents]
-            kinship = (1 + kinship_sparse_matrix[first_parent][second_parent]) / 2
+            if first_parent < second_parent:
+                kinship = (1 + kinship_sparse_matrix[first_parent][second_parent]) / 2
+            else:
+                kinship = (1 + kinship_sparse_matrix[second_parent][first_parent]) / 2
         kinship_sparse_matrix[vertex][vertex] = kinship
+
+    def _process_sublist(self, vertex, sublist, kinship_sparse_matrix):
+        for processed_vertex in sublist:
+            self._calculate_pair_kinship_sparse(kinship_sparse_matrix=kinship_sparse_matrix,
+                                                first_vertex=vertex,
+                                                second_vertex=processed_vertex)
+    def calculate_sparse_kinship_queue_c(self):
+        children_map = {x: self.get_children(x) for x in self}
+        parents_map = {x: self.get_parents(x) for x in self}
+        probands = frozenset(self.get_sink_vertices())
+        kinship_sparse_matrix = defaultdict(dict)
+        # Priority queue which only contains those individuals whose parents have been processed
+        founders = frozenset({x for x in self if self.is_orphan(x)})
+        queue = []
+        parent_to_remaining_children = {x: len(self.get_children(x)) for x in self}
+        child_to_remaining_parents = {x: len(self.get_parents(x)) for x in self}
+        kinship_sparse_matrix = kinship.calculate_kinship_sparse(
+            sink_vertices=probands, founders=founders, parent_to_remaining_children=parent_to_remaining_children,
+            child_to_remaining_parents=child_to_remaining_parents, children=children_map,
+            parents=parents_map, order=self.order(), counter_limit=200
+        )
+        return kinship_sparse_matrix
 
     def calculate_sparse_kinship_queue(self):
         probands = frozenset(self.get_sink_vertices())
         kinship_sparse_matrix = defaultdict(dict)
         # Priority queue which only contains those individuals whose parents have been processed
-        orphans = [x for x in self if self.is_orphan(x)]
+        founders = frozenset({x for x in self if self.is_orphan(x)})
         queue = []
         parent_to_remaining_children = {x: len(self.get_children(x)) for x in self}
         child_to_remaining_parents = {x: len(self.get_parents(x)) for x in self}
-        for orphan in orphans:
-            heapq.heappush(queue, (-len(self.get_vertex_spouses(orphan)), (orphan,)))
-            # queue.append(orphan)
+        for founder in founders:
+            # heapq.heappush(queue, (-len(self.get_vertex_spouses(founder)), (founder,)))
+            heapq.heappush(queue, (0, (founder,)))
+        vertices_in_the_cut = set(founders)
         processed_vertices = 0
         # TODO: heappushpop is more efficient than heappush followed by heappop
         counter = 0
-        counter_limit = 1000
+        counter_limit = 200
         while queue:
             counter += 1
             if counter == counter_limit:
+                print(f"The size of the cut: {len(vertices_in_the_cut)}")
                 print(f"Queue size: {len(queue)}")
                 print(f"Progress {processed_vertices / self.order()}")
                 counter = 0
             children_number, vertices = heapq.heappop(queue)
-            # vertex = queue.pop(0)
             for vertex in vertices:
                 processed_vertices += 1
+                vertices_in_the_cut.add(vertex)
                 self._calculate_self_kinship_sparse(kinship_sparse_matrix=kinship_sparse_matrix, vertex=vertex)
                 for processed_vertex in kinship_sparse_matrix:
                     if processed_vertex == vertex:
@@ -216,12 +255,12 @@ class Pedigree(GenGraph):
                     self._calculate_pair_kinship_sparse(kinship_sparse_matrix=kinship_sparse_matrix,
                                                         first_vertex=vertex,
                                                         second_vertex=processed_vertex)
-
                 for parent in self.get_parents(vertex):
                     parent_to_remaining_children[parent] -= 1
                     if parent_to_remaining_children[parent] == 0:
                         if parent not in probands:
                             parent_to_remaining_children.pop(parent)
+                            vertices_in_the_cut.remove(parent)
                             kinship_sparse_matrix.pop(parent)
                             for other_vertex in kinship_sparse_matrix:
                                 kinship_sparse_matrix[other_vertex].pop(parent)
