@@ -1,4 +1,3 @@
-import sys
 from src.basic.CoalescentTree import CoalescentTree
 from src.basic.PloidPedigree import PloidPedigree
 from src.utility.utility import *

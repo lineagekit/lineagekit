@@ -330,9 +330,12 @@ class GenGraph(nx.DiGraph):
                         line.strip('\n').split(separation_symbol)[:max_parent_number + 1]))
 
     def _on_multiple_vertex_definition(self, vertex: int, new_parents):
-        self.remove_edges_to_parents(vertex)
+        if new_parents == self.get_parents(vertex):
+            warnings.warn(f"Individual {vertex} is specified multiple times with the same parents", UserWarning)
+            return
         warnings.warn(f"Individual {vertex} is specified multiple times in the graph."
                       f"The previous parents are {self.get_parents(vertex)}, new values: {new_parents}", UserWarning)
+        self.remove_edges_to_parents(vertex)
 
     @staticmethod
     def _read_file_and_parse_lines(filepath: str, skip_first_line: bool,
@@ -357,7 +360,7 @@ class GenGraph(nx.DiGraph):
                                                   max_parent_number=max_parent_number,
                                                   separation_symbol=separation_symbol)
         except ValueError:
-            raise Exception("Invalid line")
+            raise Exception(f"Invalid line {line}")
         if child in self and self.has_parents(child):
             self._on_multiple_vertex_definition(child, parents)
         for parent in parents:
