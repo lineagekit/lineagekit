@@ -12,6 +12,13 @@ https://github.com/DomNelson/ISGen
 
 ## sgkit
 
+# Installation
+
+1. Clone the repository and `cd` into the root of the project.
+2. Run `pip install -r requirements.txt`
+3. Run `pip install .`
+
+To use this package, you need to have a C++ compiler installed on your machine with support for at least C++17.
 # [Development policy](#development-policy)
 
 If you want to contribute to this project, follow these steps:

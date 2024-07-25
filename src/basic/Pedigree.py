@@ -101,10 +101,16 @@ class Pedigree(GenGraph):
                 current_index += 1
         return vertex_to_index, kinship_matrix
 
-    def calculate_probands_kinship(self, mode: KinshipMode = KinshipMode.SPEED):
-        children_map = {x: self.get_children(x) for x in self}
-        parents_map = {x: self.get_parents(x) for x in self}
-        probands = frozenset(self.get_sink_vertices())
+    def calculate_probands_kinship(self, probands: set[int] = None, mode: KinshipMode = KinshipMode.SPEED):
+        if probands is None:
+            probands = frozenset(self.get_sink_vertices())
+            children_map = {x: self.get_children(x) for x in self}
+            parents_map = {x: self.get_parents(x) for x in self}
+        else:
+            # Calculate the ascending genealogy if the proband list is custom
+            ascending_genealogy: set[int] = self.get_ascending_graph_from_vertices(probands)
+            children_map = {x: list(ascending_genealogy.intersection(self.get_children(x))) for x in ascending_genealogy}
+            parents_map = {x: self.get_parents(x) for x in ascending_genealogy}
         if mode == KinshipMode.SPEED:
             kinship_sparse_matrix = kinship.calculate_kinship_sparse_speed(
                 sink_vertices=probands, children=children_map,

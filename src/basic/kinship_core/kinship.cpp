@@ -160,8 +160,11 @@ KinshipMatrix calculate_kinship_sparse(
             calculate_pair_kinships_sparse(kinship_sparse_matrix, vertex, parents);
             for (const auto& parent : parents.at(vertex))
             {
-                if (--parent_to_remaining_children[parent] == 0)
+                // Updating the counter of unprocessed children for the parent
+                if (--parent_to_remaining_children[parent] == 0 && sink_vertices.find(parent) == sink_vertices.end())
                 {
+                    // Erasing the parent's kinship information because it isn't a proband
+                    // and all of its children have been processed
                     parent_to_remaining_children.erase(parent);
                     kinship_sparse_matrix.erase(parent);
                     for (auto& other_vertex : kinship_sparse_matrix)
