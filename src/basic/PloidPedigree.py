@@ -1,10 +1,13 @@
 from __future__ import annotations
 from typing import Iterable
-from src.basic.GenGraph import GenGraph
+from basic.GenGraph import GenGraph
 
 
 class PloidPedigree(GenGraph):
-
+    """
+    Pedigree class where every node represents a ploid (half an individual). The maternal ploid is connected with
+    both the mother's ploid (if present), and the paternal ploid is connected with the father's ploids (if present).
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(parent_number=2, *args, **kwargs)
 
@@ -12,8 +15,8 @@ class PloidPedigree(GenGraph):
     def get_ploid_pedigree_from_file(filepath: str, probands: Iterable[int] = None,
                                      missing_parent_notation=None, separation_symbol=' ',
                                      skip_first_line: bool = False) -> PloidPedigree:
-        """!
-        @brief Parses the genealogical graph from the file specified by the path, creating two vertices per
+        """
+        Parses the genealogical graph from the file specified by the path, creating two vertices per
         individual in the input file.
         If the individual's id is x, then the resulting graph will have two vertices 2 * x and 2 * x + 1 for their
         ploids.
@@ -21,17 +24,21 @@ class PloidPedigree(GenGraph):
         ids 2 and 3), then the resulting graph will have the following information:
         parents_map[2] = 4, 5
         parents_map[3] = 6, 7
-        @param filepath The path to the file to be used. The file can optionally start with 1 comment line starting with
-        the '#' symbol.
-        @param probands The probands for which the ascending genealogy should be calculated. By default, all the
-        vertices from the input file are stored
-        @param separation_symbol The symbol used to separate the values in a line. By default, a space is used.
-        @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
-        @param skip_first_line Specifies whether the first line in the file should be skipped. Can be useful if the
-        header does not start with a '#' symbol.
-        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
-        @return The processed pedigree.
 
+        Args:
+            filepath (str): The path to the file to be used. The file can optionally start with 1 comment line
+            starting with the '#' symbol.
+            probands (Iterable[int]): The probands for which the ascending genealogy should be calculated.
+            By default, all the vertices from the input file are stored
+            separation_symbol (str): The symbol used to separate the values in a line. By default, a space is used.
+            missing_parent_notation (Iterable[str]): The list of text sequences representing that the given individual
+                                    has no parents. If not specified, the default values "-1" and "." are used
+                                    (meaning that both are accepted at the same time).
+            skip_first_line (bool): Specifies whether the first line in the file should be skipped. Can be useful if the
+                            header does not start with a '#' symbol.
+
+        Returns:
+            The processed pedigree.
         """
         pedigree: PloidPedigree = PloidPedigree()
 
@@ -49,14 +56,17 @@ class PloidPedigree(GenGraph):
 
     def add_line_from_pedigree(self, line: str, max_parent_number: int,
                                missing_parent_notation=None, separation_symbol=' '):
-        """!
-        @brief This function processes a single line from a pedigree and updates the graph accordingly.
-        @param line The line to be parsed. The line must consists of at least three integer values separated by
-        the separation symbol.
-        @param missing_parent_notation The list of text sequences representing that the given individual has no parents.
-        If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
-        @param separation_symbol: The symbol used to separate the integers in the line. By default, a space is used.
-        @param max_parent_number The maximum number of parents a vertex can have. Must be either 1 or 2
+        """
+        This function processes a single line from a pedigree and updates the graph accordingly.
+
+        Args:
+            line: The line to be parsed. The line must consists of at least three integer values separated by
+                 the separation symbol.
+            missing_parent_notation: The list of text sequences representing that the given individual has no parents.
+                                    If not specified, the default values "-1" and "." are used
+                                    (meaning that both are accepted at the same time).
+            separation_symbol: The symbol used to separate the integers in the line. By default, a space is used.
+            max_parent_number: The maximum number of parents a vertex can have. Must be either 1 or 2.
         """
         if missing_parent_notation is None:
             missing_parent_notation = ("-1", '.')
@@ -75,11 +85,13 @@ class PloidPedigree(GenGraph):
                 child_ploid += 1
 
     def _write_levels_as_diploid(self, file, levels: [[int]]):
-        """!
-        @brief Writes the given levels of the graph to a file. Assumes that the graph vertices represent ploids, and
+        """
+        Writes the given levels of the graph to a file. Assumes that the graph vertices represent ploids, and
         saves the corresponding individuals (diploid organisms) to the file.
-        @param file The file to which the content should be written.
-        @param levels The levels that should be written to the file.
+
+        Args:
+            file: The file to which the content should be written.
+            levels: The levels that should be written to the file.
         """
         # TODO: Refactor the code to avoid code duplication
         processed_ids = set()
@@ -111,11 +123,13 @@ class PloidPedigree(GenGraph):
                 file.write(f"{vertex_id} {first_parent_id} {second_parent_id}\n")
 
     def save_ascending_genealogy_as_diploid(self, filepath: str, vertices: Iterable[int]):
-        """!
-        @brief Saves the ascending genealogy for the given list of vertices
+        """
+        Saves the ascending genealogy for the given list of vertices
         treating every vertex as a ploid of a diploid organism.
-        @param filepath The path to the file.
-        @param vertices The vertices for which the ascending genealogy should be saved.
+
+        Args:
+            filepath: The path to the file.
+            vertices: The vertices for which the ascending genealogy should be saved.
         """
         levels = self.get_ascending_genealogy_from_vertices_by_levels(vertices)
         file = open(filepath, 'w')
@@ -123,9 +137,11 @@ class PloidPedigree(GenGraph):
         file.close()
 
     def save_as_diploid(self, filepath: str):
-        """!
-        @brief Saves the graph treating every vertex as a ploid of a diploid organism.
-        @param filepath The path to the file to be written to.
+        """
+        Saves the graph treating every vertex as a ploid of a diploid organism.
+
+        Args:
+            filepath: The path to the file to be written to.
         """
         file = open(filepath, 'w')
         self._write_levels_as_diploid(file, self.get_levels())
@@ -133,14 +149,20 @@ class PloidPedigree(GenGraph):
 
     @staticmethod
     def get_individual_ids_from_ploids(ploid_ids: Iterable[int]):
-        """!
-        @brief Transforms the given list of ploid ids into the individual ids.
+        """
+        Transforms the given list of ploid ids into the individual ids.
+
+        Returns:
+            The individual ids.
         """
         return {x // 2 for x in ploid_ids}
 
     @staticmethod
     def get_ploids_from_individual_ids(individual_ids: Iterable[int]):
-        """!
-        @brief Transforms the given list of individual ids into the corresponding ploids' ids.
+        """
+        Transforms the given list of individual ids into the corresponding ploids' ids.
+
+        Returns:
+            The ploids' ids.
         """
         return [2 * x for x in individual_ids] + [2 * x + 1 for x in individual_ids]

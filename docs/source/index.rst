@@ -1,16 +1,11 @@
-======================================
-Welcome to lineagekit's documentation!
-======================================
+##################################################
+lineagekit: Python library with genealogy methods
+##################################################
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-    index
-    quickstart
 
-==================
+###################
 Introduction
-==================
+###################
 This is the manual for **lineagekit**, a population genetic library that contains various useful tools for working
 with genealogies. With lineagekit you can:
 
@@ -18,21 +13,28 @@ with genealogies. With lineagekit you can:
 * Build custom genealogies from scratch.
 * Modify the obtained genealogies.
 * Obtain information by using utility function provided by the library.
+* Calculate kinships in large genealogies.
 
-==================
+####################
 Contents
-==================
+####################
 
-**Getting started**
+.. toctree::
+   :maxdepth: 2
 
-==================
+   quickstart
+   kinship
+   gen_graph
+   pedigree
+   ploid_pedigree
+   coalescent_tree
+
+
+##################
 Development policy
-==================
+##################
 
 If you would like to contribute to the project, or if you have found a certain issue with the code,
 refer to our
 `development policy <https://github.com/lineagekit/lineagekit/tree/dev?tab=readme-ov-file#development-policy>`_
 for more information.
-
-:ref:`quickstart`
-

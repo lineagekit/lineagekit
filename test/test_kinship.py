@@ -3,7 +3,7 @@ import itertools
 import pytest
 import os
 import glob
-from src.basic.Pedigree import *
+from basic.Pedigree import *
 
 accuracy_precision = 0.001
 
@@ -25,7 +25,7 @@ def parsed_pedigrees(test_pedigrees):
 
 @pytest.fixture
 def kinship_test_2_path(test_pedigrees):
-    return f"{test_pedigrees}/kinship_test_2.pedigree"
+    return os.path.join(test_pedigrees, "kinship_test_2.pedigree")
 
 
 @pytest.fixture

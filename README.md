@@ -15,8 +15,7 @@ https://github.com/DomNelson/ISGen
 # Installation
 
 1. Clone the repository and `cd` into the root of the project.
-2. Run `pip install -r requirements.txt`
-3. Run `pip install .`
+2. Run `pip install .`
 
 To use this package, you need to have a C++ compiler installed on your machine with support for at least C++17.
 # [Development policy](#development-policy)
@@ -34,6 +33,8 @@ existing code, try to create a test case for which the old version of the code d
 
 If you would like to request a certain change in the code, or if you have found a bug / unexpected behaviour,
 you can just create an issue with the corresponding description. 
+
+If you want to build the documentation locally, `cd` into the `docs` directory and run `make html`.
 
 # [Documentation](#documentaion)
 You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/)

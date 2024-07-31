@@ -4,10 +4,10 @@ from typing import Iterable
 import networkx
 import pytest
 import os
-from src.basic.GenGraph import GenGraph
-from src.basic.Pedigree import Pedigree
-from src.basic.PloidPedigree import PloidPedigree
-from src.basic.CoalescentTree import CoalescentTree
+from basic.GenGraph import GenGraph
+from basic.Pedigree import Pedigree
+from basic.PloidPedigree import PloidPedigree
+from basic.CoalescentTree import CoalescentTree
 
 
 @pytest.fixture

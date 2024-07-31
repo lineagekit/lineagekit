@@ -1,8 +1,6 @@
-from src.basic.CoalescentTree import CoalescentTree
-from src.basic.PloidPedigree import PloidPedigree
-from src.utility.utility import *
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "../../.."))
+from basic.CoalescentTree import CoalescentTree
+from basic.PloidPedigree import PloidPedigree
+from utility.utility import *
 
 
 def save_largest_clade_and_get_probands():

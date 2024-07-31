@@ -1,8 +1,13 @@
 import os
 import sys
-
 from setuptools import setup, Extension, find_packages
 import pybind11
+
+
+def parse_requirements(filename):
+    with open(filename, 'r') as f:
+        return f.read().splitlines()
+
 
 # Determine the appropriate compiler flags based on the operating system
 if sys.platform == "win32":
@@ -32,9 +37,10 @@ def get_extensions():
 # Setup configuration
 setup(
     name="kinship",
-    version="0.1",
-    packages=find_packages(include=['kinship', 'kinship.*']),  # Find all packages in the kinship directory
+    version="1.0",
+    packages=find_packages(where='src'),  # Find all packages under 'src'
+    package_dir={'': 'src'},  # Set the package root directory
     ext_modules=get_extensions(),
-    install_requires=["pybind11"],  # Ensure pybind11 is installed
+    install_requires=parse_requirements('requirements.txt'),  # Ensure pybind11 is installed
     zip_safe=False,
 )

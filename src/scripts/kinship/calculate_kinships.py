@@ -1,5 +1,7 @@
-from src.basic.Pedigree import Pedigree
-from src.utility.utility import *
+import itertools
+
+from basic.Pedigree import Pedigree
+from utility.utility import *
 import time
 
 filepath = get_file_path("Specify the path to the pedigree:")
@@ -22,5 +24,8 @@ for proband in pedigree.get_sink_vertices():
     for other_proband in pedigree.get_sink_vertices():
         simple_algorithm_kinship = direct_kinship_matrix[vertex_to_index[proband], vertex_to_index[other_proband]]
         kinship_c_implementation = kinship_matrix_c.get_kinship(proband, other_proband)
+
+for vertex_1, vertex_2 in itertools.combinations(pedigree, 2):
+    kinship = direct_kinship_matrix[vertex_to_index[vertex_1], vertex_to_index[vertex_2]]
 
 print("Kinships have been calculated")

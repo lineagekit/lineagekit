@@ -1,9 +1,5 @@
-import sys
-
-from src.basic.Pedigree import Pedigree
-from src.utility.utility import *
-
-sys.path.append(os.path.join(os.path.dirname(__file__), "../../.."))
+from basic.Pedigree import Pedigree
+from utility.utility import *
 
 filepath = get_file_path("Specify the path to the pedigree:")
 pedigree = Pedigree.get_pedigree_graph_from_file(filepath=filepath, separation_symbol=";",
