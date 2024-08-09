@@ -37,9 +37,12 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov
-        pytest test/basic_test.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test/test_kinship.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest test/basic_test.py test/test_kinship.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+    - name: List generated files
+      run: find . -name "*.xml"
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        slug: lineagekit/lineagekit
+        files: coverage.xml
