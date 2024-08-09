@@ -15,6 +15,22 @@ with genealogies. With lineagekit you can:
 * Obtain information by using utility function provided by the library.
 * Calculate kinships in large genealogies.
 
+##################
+Installation
+##################
+
+1. Clone the `repository <https://github.com/lineagekit/lineagekit>`_ and ``cd`` into the root of the project.
+2. Run ``pip install .``
+
+##################
+Development policy
+##################
+
+If you would like to contribute to the project, or if you have found a certain issue with the code,
+refer to our
+`development policy <https://github.com/lineagekit/lineagekit/tree/dev?tab=readme-ov-file#development-policy>`_
+for more information.
+
 ####################
 Contents
 ####################
@@ -28,13 +44,3 @@ Contents
    pedigree
    ploid_pedigree
    coalescent_tree
-
-
-##################
-Development policy
-##################
-
-If you would like to contribute to the project, or if you have found a certain issue with the code,
-refer to our
-`development policy <https://github.com/lineagekit/lineagekit/tree/dev?tab=readme-ov-file#development-policy>`_
-for more information.
