@@ -1,5 +1,10 @@
+
+
 # lineagekit
 A python library with genealogy methods. We will seek to integrate code or functionality or both from:
+
+# [Documentation](#documentaion)
+You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/)
 
 ## ISGEN (Dominic's code on importance sampling)
 https://github.com/DomNelson/ISGen
@@ -49,5 +54,4 @@ you can just create an issue with the corresponding description.
 
 If you want to build the documentation locally, `cd` into the `docs` directory and run `make html`.
 
-# [Documentation](#documentaion)
-You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/)
+
