@@ -51,7 +51,7 @@ class PloidPedigree(GenGraph):
         GenGraph._read_file_and_parse_lines(filepath=filepath, skip_first_line=skip_first_line,
                                             parse_operation=process_line)
         if probands is not None:
-            pedigree.reduce_to_ascending_genealogy(probands=probands)
+            pedigree.reduce_to_ascending_graph(probands=probands)
         return pedigree
 
     def add_line_from_pedigree(self, line: str, max_parent_number: int,
@@ -131,7 +131,7 @@ class PloidPedigree(GenGraph):
             filepath: The path to the file.
             vertices: The vertices for which the ascending genealogy should be saved.
         """
-        levels = self.get_ascending_genealogy_from_vertices_by_levels(vertices)
+        levels = self.get_ascending_graph_from_vertices_by_levels(vertices)
         file = open(filepath, 'w')
         self._write_levels_as_diploid(file, levels)
         file.close()

@@ -210,7 +210,7 @@ class Pedigree(GenGraph):
             parents_map = {x: self.get_parents(x) for x in self}
         else:
             # Calculate the ascending genealogy if the proband list is custom
-            ascending_genealogy: set[int] = self.get_ascending_graph_from_vertices(probands)
+            ascending_genealogy: set[int] = self.get_ascending_vertices_from_probands(probands)
             children_map = {x: list(ascending_genealogy.intersection(self.get_children(x))) for x in ascending_genealogy}
             parents_map = {x: self.get_parents(x) for x in ascending_genealogy}
         if mode == KinshipMode.SPEED:

@@ -39,8 +39,9 @@ Contents
    :maxdepth: 2
 
    quickstart
-   kinship
    gen_graph
    pedigree
    ploid_pedigree
    coalescent_tree
+
+   Use-cases <use_cases/index>

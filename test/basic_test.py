@@ -133,7 +133,7 @@ def test_subgraph_consistency(simple_1):
 
 
 def test_ascending_genealogy_does_not_throw_exceptions_for_non_existing_vertices(simple_1_haploid):
-    ascending_genealogy = simple_1_haploid.get_ascending_graph_from_vertices([-1, -12123, 1, 2])
+    ascending_genealogy = simple_1_haploid.get_ascending_vertices_from_probands([-1, -12123, 1, 2])
     assert set(ascending_genealogy) == {1, 2, 6, 7, 10, 11}
 
 
@@ -159,26 +159,26 @@ def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, sim
     assert graph.get_vertices_number() == 22, f"Expected 22 vertices, got {graph.get_vertices_number()}"
     assert set(graph.nodes()) == set(range(2, 24)), (f"Expected nodes' ids to be from 1 to 22, "
                                                      f"got {set(graph.nodes())}")
-    ascending_graph = graph.get_ascending_graph_from_vertices([4, 5])
+    ascending_graph = graph.get_ascending_vertices_from_probands([4, 5])
     ploids_ascending_graph = transform_individual_ids_into_ploids([2, 6, 7, 10, 11])
     assert ascending_graph == ploids_ascending_graph, (f"Expected {ploids_ascending_graph},"
                                                        f" got {ascending_graph}")
 
     graph.remove_nodes_from(transform_individual_ids_into_ploids([8]))
-    ascending_graph = graph.get_ascending_graph_from_vertices(transform_individual_ids_into_ploids([3, 4, 5]))
+    ascending_graph = graph.get_ascending_vertices_from_probands(transform_individual_ids_into_ploids([3, 4, 5]))
     ascending_graph_correct = transform_individual_ids_into_ploids([3, 4, 5, 9])
     assert ascending_graph == ascending_graph_correct, (f"Expected {ascending_graph_correct},"
                                                         f" got {ascending_graph}")
     graph.add_edges_from([(12, 6), (13, 6), (14, 9), (15, 9)])
-    ascending_graph = graph.get_ascending_graph_from_vertices(transform_individual_ids_into_ploids([3, 4, 5]))
+    ascending_graph = graph.get_ascending_vertices_from_probands(transform_individual_ids_into_ploids([3, 4, 5]))
     ascending_graph_correct = transform_individual_ids_into_ploids([3, 4, 5, 6, 7, 9, 10, 11])
     assert ascending_graph == ascending_graph_correct, (f"Expected {ascending_graph_correct},"
                                                         f" got {ascending_graph}")
     graph.add_edges_from([(6, 2), (7, 3), (8, 4), (9, 4)])
-    ascending_graph = graph.get_ascending_graph_from_vertices(transform_individual_ids_into_ploids([3, 4, 5]))
+    ascending_graph = graph.get_ascending_vertices_from_probands(transform_individual_ids_into_ploids([3, 4, 5]))
     assert ascending_graph == ascending_graph_correct, (f"Expected {ascending_graph_correct},"
                                                         f" got {ascending_graph}")
-    ascending_graph = graph.get_ascending_graph_from_vertices(transform_individual_ids_into_ploids([1, 2]))
+    ascending_graph = graph.get_ascending_vertices_from_probands(transform_individual_ids_into_ploids([1, 2]))
     ascending_graph_correct = transform_individual_ids_into_ploids([1, 2, 3, 4, 6, 7, 9, 10, 11])
     assert ascending_graph == ascending_graph_correct, (f"Expected {ascending_graph_correct},"
                                                         f" got {ascending_graph}")
@@ -213,10 +213,10 @@ def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, sim
 
 def test_ascending_genealogy_reduction(simple_1_haploid):
     graph = simple_1_haploid
-    graph.reduce_to_ascending_genealogy([1, 3])
+    graph.reduce_to_ascending_graph([1, 3])
     assert set(graph.nodes()) == {1, 6, 7, 10, 11, 3, 8, 9}
     assert graph.get_children(8) == [3]
-    graph.reduce_to_ascending_genealogy([1])
+    graph.reduce_to_ascending_graph([1])
     assert set(graph.nodes()) == {1, 6, 7, 10, 11}
 
 
@@ -224,7 +224,7 @@ def test_ascending_genealogy_parsing(simple_1_haploid, simple_1_haploid_ascendin
                                      parse_simple_1_haploid_ascending_proband):
     graph_reduced = simple_1_haploid_ascending
     graph_full = simple_1_haploid
-    graph_full.reduce_to_ascending_genealogy(parse_simple_1_haploid_ascending_proband)
+    graph_full.reduce_to_ascending_graph(parse_simple_1_haploid_ascending_proband)
     assert networkx.is_isomorphic(graph_reduced, graph_full)
 
 
@@ -332,7 +332,7 @@ def test_saving_as_diploid(simple_1):
     assert {2, 3, 6, 7, 8, 9} == frozenset(ploid_ids)
     assert frozenset(PloidPedigree.get_individual_ids_from_ploids(ploid_ids)) == individuals_ids
     simple_1.save_ascending_genealogy_as_diploid(filepath=filepath, vertices=ploid_ids)
-    simple_1.reduce_to_ascending_genealogy(ploid_ids)
+    simple_1.reduce_to_ascending_graph(ploid_ids)
     try:
         parsed_graph = PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath)
     except Exception:

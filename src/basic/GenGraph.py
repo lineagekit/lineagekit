@@ -76,18 +76,18 @@ class GenGraph(nx.DiGraph):
             self._initialize_vertex_to_level_map()
         return self.levels
 
-    def get_ascending_genealogy_from_vertices_by_levels(self, vertices: Iterable[int]):
+    def get_ascending_graph_from_vertices_by_levels(self, vertices: Iterable[int]):
         """
-        Returns the ascending genealogy for the given list of vertices ordered by levels.
+        Returns the ascending graph for the given list of vertices ordered by levels.
 
         Args:
-            vertices (Iterable[int]): The vertices for which the ascending genealogy should be calculated.
+            vertices (Iterable[int]): The vertices for which the ascending graph should be calculated.
 
         Returns:
-            The ascending genealogy for the given list of vertices ordered by levels.
+            The ascending graph for the given list of vertices ordered by levels.
         """
-        ascending_genealogy = self.get_ascending_graph_from_vertices(vertices)
-        return [[x for x in level if x in ascending_genealogy] for level in self.get_levels()]
+        ascending_graph = self.get_ascending_vertices_from_probands(vertices)
+        return [[x for x in level if x in ascending_graph] for level in self.get_levels()]
 
     def get_top_level_vertices(self) -> [int]:
         """
@@ -300,18 +300,18 @@ class GenGraph(nx.DiGraph):
         """
         return len(self.nodes)
 
-    def get_ascending_graph_from_vertices(self, vertices: Iterable[int]) -> {int}:
+    def get_ascending_vertices_from_probands(self, probands: Iterable[int]) -> {int}:
         """
-        This method returns all the vertices in the ascending genealogy for the given list of vertices.
+        This method returns all the vertices in the ascending graph for the given list of vertices.
 
         Args:
-            vertices (Iterable[int]): The vertices for which the ascending genealogy should be calculated.
+            probands (Iterable[int]): The vertices for which the ascending graph should be calculated.
 
         Returns:
-            The vertices in the ascending genealogy.
+            The vertices in the ascending graph.
         """
         result = set()
-        for vertex in vertices:
+        for vertex in probands:
             if vertex in self.nodes:
                 result.add(vertex)
                 result.update(nx.ancestors(self, vertex))
@@ -355,16 +355,16 @@ class GenGraph(nx.DiGraph):
                 return False
         return True
 
-    def reduce_to_ascending_genealogy(self, probands: Iterable[int]):
+    def reduce_to_ascending_graph(self, probands: Iterable[int]):
         """
-        Reduces the given graph, so that only the information for the ascending genealogy for the given
+        Reduces the given graph, so that only the information for the ascending graph for the given
         probands remains in the end.
 
         Args:
             probands (Iterable[int]): The probands.
         """
-        ascending_genealogy = self.get_ascending_graph_from_vertices(probands)
-        self.remove_nodes_from(set(self.nodes()).difference(ascending_genealogy))
+        ascending_graph = self.get_ascending_vertices_from_probands(probands)
+        self.remove_nodes_from(set(self.nodes()).difference(ascending_graph))
 
     @staticmethod
     def get_graph_from_tree(tree: Tree, probands: Iterable[int] = None) -> GenGraph:
@@ -375,14 +375,14 @@ class GenGraph(nx.DiGraph):
         Args:
             tree (Tree): The tskit tree to be used.
             probands (Iterable[int]): Optional parameter. If specified, the resulting graph is reduced, so that only
-                                      the ascending genealogy for the given list of probands is returned.
+                                      the ascending graph for the given list of probands is returned.
 
         Returns:
             The obtained GenGraph.
         """
         result_graph = GenGraph(tree.parent_dict.items())
         if probands is not None:
-            result_graph.reduce_to_ascending_genealogy(probands=probands)
+            result_graph.reduce_to_ascending_graph(probands=probands)
         return result_graph
 
     @staticmethod
@@ -398,10 +398,11 @@ class GenGraph(nx.DiGraph):
             filepath (str): The path to the file to be used. The file can optionally start with 1 comment line starting
                             with the '#' symbol.
             parent_number (int): The maximum number of parents an individual can posses. The default is 2.
-            probands (Iterable[int]): Optional parameter. The probands for which the ascending genealogy should be
+            probands (Iterable[int]): Optional parameter. The probands for which the ascending graph should be
                                       calculated. By default, all the vertices from the input file are stored.
             missing_parent_notation The list of text sequences representing that the given individual has no parents.
-                                    If not specified, the default values "-1" and "." are used (meaning that both are accepted at the same time).
+                                    If not specified, the default values "-1" and "." are used (meaning that both are
+                                    accepted at the same time).
             separation_symbol (str): The symbol used to separate the values in a line. By default, a space is used.
             skip_first_line (bool): Specifies whether the first line in the file should be skipped. Can be useful if the
                                     header does not start with a '#' symbol.
@@ -419,7 +420,7 @@ class GenGraph(nx.DiGraph):
         pedigree._read_file_and_parse_lines(filepath=filepath, skip_first_line=skip_first_line,
                                             parse_operation=process_line)
         if probands is not None:
-            pedigree.reduce_to_ascending_genealogy(probands=probands)
+            pedigree.reduce_to_ascending_graph(probands=probands)
         return pedigree
 
     @staticmethod

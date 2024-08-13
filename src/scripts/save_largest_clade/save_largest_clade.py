@@ -7,7 +7,7 @@ def save_largest_clade_and_get_probands():
     filepath = get_file_path("Specify the path to the coalescent tree:\n")
     coalescent_tree: CoalescentTree = CoalescentTree.get_coalescent_tree_from_file(filepath=filepath)
     largest_clade = coalescent_tree.get_largest_clade_by_probands()
-    coalescent_tree.reduce_to_ascending_genealogy(largest_clade)
+    coalescent_tree.reduce_to_ascending_graph(largest_clade)
     while True:
         try:
             result_clade_filepath = input("Specify the path to the resulting file:\n")
