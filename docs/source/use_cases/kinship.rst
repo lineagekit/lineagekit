@@ -8,15 +8,16 @@ In population genetics, the term "kinship" typically refers to the level of gene
 individuals, and is represented as a number between 0 and 1. More on calculating kinships can be found
 `here <https://academic.oup.com/bioinformatics/article/35/6/1002/5085372>`_.
 
-There are several methods available in the **Pedigree** class for kinship calculation.
+There are several methods available in the :class:`Pedigree` class for kinship calculation.
 
 ----------------------------------
 Calculating all-pairwise kinships
 ----------------------------------
 
 You can calculate the kinship coefficients between all the pairs of individuals in your pedigree by running the
-*calculate_kinship* function. This function calculates the kinship coefficients and returns a `numpy <https://numpy.org/>`_
-matrix as the result. Additionally, the function returns a dictionary that allows you to index the matrix:
+:meth:`calculate_kinship <Pedigree.Pedigree.calculate_kinship>` function. This function calculates the kinship
+coefficients and returns a `numpy <https://numpy.org/>`_ matrix as the result.
+Additionally, the function returns a dictionary that allows you to index the matrix:
 
 .. code-block:: python
 
@@ -38,22 +39,23 @@ Proband kinship calculation
 ----------------------------------
 In some cases, we only need to calculate the kinship coefficients among a given list of individuals, not the entire
 pedigree. If the pedigree is small, we can still use the previous method. However, when the pedigree is large,
-this approach may not be sufficient. For this purpose, we can use the *calculate_probands_kinship* function,
-which is a much more efficient version of the previous algorithm when we are only interested in a few kinship
-coefficient values.
+this approach may not be sufficient. For this purpose, we can use the
+:meth:`calculate_probands_kinship <Pedigree.Pedigree.calculate_probands_kinship>` function, which is a much more
+efficient version of the previous algorithm when we are only interested in a few kinship coefficient values.
 
 ==================================
 API
 ==================================
 
-The *calculate_probands_kinship* function takes two additional parameters.
-The first parameter, **probands**, is the list of individuals for which the kinship coefficients are calculated.
+The :meth:`calculate_probands_kinship <Pedigree.Pedigree.calculate_probands_kinship>` function takes two additional
+parameters.
+The first parameter, :attr:`probands`, is the list of individuals for which the kinship coefficients are calculated.
 Note that there are no restrictions on the individuals in the list; they simply should be valid vertices in the pedigree.
 If not specified, the sink vertices are used as probands.
 
-The second parameter, **mode**, specifies the running mode of the algorithm. The default option, **SPEED**, offers the
-best running time and should be used when memory is not an issue. In cases where memory restrictions are high,
-the **MEMORY** option can be used to reduce memory usage at the cost of increased running time.
+The second parameter, :attr:`mode`, specifies the running mode of the algorithm. The default option, :attr:`SPEED`,
+offers the best running time and should be used when memory is not an issue. In cases where memory restrictions are high,
+the :attr:`MEMORY` option can be used to reduce memory usage at the cost of increased running time.
 On average, the MEMORY option can save up to 25% of memory and take around 40-45% more running time.
 
 .. code-block:: python
