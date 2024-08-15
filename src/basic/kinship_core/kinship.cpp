@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/numpy.h>
 #include <queue>
 #include <vector>
 #include <unordered_set>
@@ -237,6 +238,38 @@ MemorySparseMatrix calculate_kinship_sparse_memory(
     return calculate_kinship_sparse<MemorySparseMatrix>(children, parents, sink_vertices);
 }
 
+template<typename KinshipMatrix>
+std::pair<std::unordered_map<size_t, size_t>, py::array_t<float>> convert_to_numpy_and_free(KinshipMatrix& self)
+{
+    // Create a mapping of keys to contiguous indices
+    std::unordered_map<size_t, size_t> key_to_index;
+    int index = 0;
+    for (const auto& row : self)
+    {
+        key_to_index[row.first] = index++;
+    }
+
+    size_t size = key_to_index.size();
+
+    // Create a NumPy array of shape (size, size)
+    py::array_t<float> numpy_matrix({size, size});
+    auto buffer = numpy_matrix.mutable_unchecked<2>();
+
+    for (const auto& row : self)
+    {
+        int row_index = key_to_index[row.first];
+        for (const auto& col : row.second)
+        {
+            int col_index = key_to_index[col.first];
+            buffer(row_index, col_index) = col.second;
+            buffer(col_index, row_index) = col.second;
+        }
+    }
+    self.clear();
+    return {key_to_index, numpy_matrix};
+}
+
+
 PYBIND11_MODULE(kinship, m)
 {
     py::class_<TimeSparseMatrix>(m, "TimeSparseMatrix")
@@ -247,7 +280,12 @@ PYBIND11_MODULE(kinship, m)
                 return self.at(key1).at(key2);
             }
             return self.at(key2).at(key1);
-        }, "Get the float value for two integers", py::arg("key1"), py::arg("key2"));
+        }, "Get the float value for two integers", py::arg("key1"), py::arg("key2"))
+        .def("to_numpy_and_free", [](TimeSparseMatrix& self)
+        {
+            auto [key_to_index, numpy_matrix] = convert_to_numpy_and_free(self);
+            return std::make_tuple(key_to_index, numpy_matrix);
+        }, "Convert the sparse matrix to a NumPy array and free the memory");
     py::class_<MemorySparseMatrix>(m, "MemorySparseMatrix")
         .def("get_kinship", [](const MemorySparseMatrix& self, int key1, int key2)
         {
@@ -256,7 +294,12 @@ PYBIND11_MODULE(kinship, m)
                 return self.at(key1).at(key2);
             }
             return self.at(key2).at(key1);
-        }, "Get the float value for two integers", py::arg("key1"), py::arg("key2"));
+        }, "Get the float value for two integers", py::arg("key1"), py::arg("key2"))
+         .def("to_numpy_and_free", [](MemorySparseMatrix& self)
+        {
+            auto [key_to_index, numpy_matrix] = convert_to_numpy_and_free(self);
+            return std::make_tuple(key_to_index, numpy_matrix);
+        }, "Convert the sparse matrix to a NumPy array and free the memory");
     m.def("calculate_kinship_sparse_speed", &calculate_kinship_sparse_speed,
           "Calculate kinship sparse matrix (running time preference)",
           py::arg("children"), py::arg("parents"), py::arg("sink_vertices"));
