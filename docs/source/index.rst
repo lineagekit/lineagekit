@@ -40,6 +40,7 @@ Contents
 
    quickstart
    gen_graph
+   abstract_pedigree
    pedigree
    ploid_pedigree
    coalescent_tree

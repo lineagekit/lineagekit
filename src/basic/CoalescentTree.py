@@ -1,5 +1,8 @@
 from __future__ import annotations
-from basic.GenGraph import *
+import networkx as nx
+from typing import Iterable
+
+from basic.GenGraph import GenGraph, Tree
 
 
 class CoalescentTree(GenGraph):

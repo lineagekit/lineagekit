@@ -3,6 +3,8 @@ import itertools
 import pytest
 import os
 import glob
+
+from basic.AbstractPedigree import KinshipMode
 from basic.Pedigree import *
 
 accuracy_precision = 0.001

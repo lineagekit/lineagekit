@@ -42,5 +42,6 @@ setup(
     package_dir={'': 'src'},  # Set the package root directory
     ext_modules=get_extensions(),
     install_requires=parse_requirements('requirements.txt'),  # Ensure pybind11 is installed
+    package_data={'': ['kinship.pyi']},
     zip_safe=False,
 )

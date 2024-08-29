@@ -1,15 +1,16 @@
 from __future__ import annotations
 from typing import Iterable
-from basic.GenGraph import GenGraph
+
+from basic.AbstractPedigree import AbstractPedigree
 
 
-class PloidPedigree(GenGraph):
+class PloidPedigree(AbstractPedigree):
     """
     Pedigree class where every node represents a ploid (half an individual). The maternal ploid is connected with
     both the mother's ploid (if present), and the paternal ploid is connected with the father's ploids (if present).
     """
     def __init__(self, *args, **kwargs):
-        super().__init__(parent_number=2, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @staticmethod
     def get_ploid_pedigree_from_file(filepath: str, probands: Iterable[int] = None,
@@ -48,8 +49,8 @@ class PloidPedigree(GenGraph):
                                             missing_parent_notation=missing_parent_notation,
                                             separation_symbol=separation_symbol)
 
-        GenGraph._read_file_and_parse_lines(filepath=filepath, skip_first_line=skip_first_line,
-                                            parse_operation=process_line)
+        AbstractPedigree._read_file_and_parse_lines(filepath=filepath, skip_first_line=skip_first_line,
+                                                    parse_operation=process_line)
         if probands is not None:
             pedigree.reduce_to_ascending_graph(probands=probands)
         return pedigree
@@ -70,10 +71,10 @@ class PloidPedigree(GenGraph):
         """
         if missing_parent_notation is None:
             missing_parent_notation = ("-1", '.')
-        child, *parents = GenGraph.parse_line(line=line,
-                                              missing_parent_notation=missing_parent_notation,
-                                              max_parent_number=max_parent_number,
-                                              separation_symbol=separation_symbol)
+        child, *parents = AbstractPedigree.parse_line(line=line,
+                                                      missing_parent_notation=missing_parent_notation,
+                                                      max_parent_number=max_parent_number,
+                                                      separation_symbol=separation_symbol)
         child_ploid = 2 * int(child)
         if child_ploid in self and self.has_parents(child_ploid):
             self._on_multiple_vertex_definition(vertex=child_ploid, new_parents=parents)
