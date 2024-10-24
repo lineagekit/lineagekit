@@ -1,8 +1,13 @@
 from enum import Enum
+from typing import Iterable
+
 import kinship
 import numpy as np
 
 from basic.GenGraph import GenGraph
+
+from abc import ABC, abstractmethod
+import random
 
 
 class KinshipMode(Enum):
@@ -10,7 +15,7 @@ class KinshipMode(Enum):
     MEMORY = 1
 
 
-class AbstractPedigree(GenGraph):
+class AbstractPedigree(GenGraph, ABC):
     """
     The abstract base class for all Pedigree abstract classes containing all the common functionality.
     This class is for internal use only.
@@ -72,13 +77,13 @@ class AbstractPedigree(GenGraph):
             tuple:
                 A tuple containing:
                     1. A dictionary mapping vertex IDs to their corresponding kinship matrix indices.
-                    2. A numpy.ndarray representing the kinship matrix where each element (i, j) is the kinship coefficient
-                       between vertex i and vertex j.
+                    2. A numpy.ndarray representing the kinship matrix where each element (i, j) is the
+                      kinship coefficient between vertex i and vertex j.
 
         Example:
             >>> # Example usage of the function:
             >>> vertex_to_index, direct_kinship_matrix = pedigree.calculate_kinship()
-            >>> kinship = direct_kinship_matrix[vertex_to_index[vertex_1], vertex_to_index[vertex_2]]
+            >>> vertices_kinship = direct_kinship_matrix[vertex_to_index[vertex_1], vertex_to_index[vertex_2]]
 
         """
         n = self.get_vertices_number()
@@ -117,7 +122,7 @@ class AbstractPedigree(GenGraph):
 
         Example:
             >>> kinship_matrix = pedigree.calculate_probands_kinship()
-            >>> kinship = kinship_matrix.get_kinship(proband, other_proband)
+            >>> probands_kinship = kinship_matrix.get_kinship(proband, other_proband)
         """
         if probands is None:
             probands = frozenset(self.get_sink_vertices())
@@ -140,3 +145,73 @@ class AbstractPedigree(GenGraph):
                 parents=parents_map
             )
         return kinship_sparse_matrix
+
+    def _select_new_parent_from_level(self, level_index: int, vertex_parents: Iterable[int]):
+        # We need to select a vertex from the level_index level.
+        # The obvious solution would be to take all the vertices from that level and remove all the parent vertices.
+        # Unfortunately, this approach can be quite slow for large graphs, as we need to filter a big list on
+        # every iteration of this loop.
+        # We could also try to select len(vertex_parents) + 1 vertices from the level and filter
+        # the resulting list, but there are corner cases as well that make the code to be not that elegant.
+        # So here, we simply try our luck and select a random vertex from the same level. This usually works
+        # on the first try and performs fast. If we fail a large number of times, we reserve to the initial version
+        # that was mentioned. It's extremely likely that in that case we don't have any other vertices from that
+        # level, so the length of the list will be <= 4 elements.
+        max_attempts = len(self.get_levels()[level_index]) * 2
+        attempts = 0
+        while attempts < max_attempts:
+            new_parent = random.choice(self.get_levels()[level_index])
+            if new_parent not in vertex_parents:
+                break
+            attempts += 1
+        else:
+            new_parent_candidates = [x for x in self.get_levels()[level_index] if x
+                                     not in vertex_parents]
+            if not new_parent_candidates:
+                raise ValueError("No other candidates available")
+            new_parent = random.sample(new_parent_candidates, 1)[0]
+        return new_parent
+
+    @abstractmethod
+    def _introduce_errors(self, error_rate: float):
+        pass
+
+    def apply_errors(self, errors):
+        """
+        Applies the errors simulated by the :meth:`introduce_and_record_errors` function.
+        """
+        for vertex, remove_parents, add_parents in errors:
+            self.remove_edges_from(((remove_parent, vertex) for remove_parent in remove_parents))
+            self.add_edges_from(((add_parent, vertex) for add_parent in add_parents))
+
+    def reverse_errors(self, errors):
+        """
+        Reverses the errors that have been applied by the :meth:`apply_errors` function.
+        """
+        for vertex, remove_parents, add_parents in errors:
+            self.remove_edges_from(((add_parent, vertex) for add_parent in add_parents))
+            self.add_edges_from(((remove_parent, vertex) for remove_parent in remove_parents))
+
+    def introduce_and_record_errors(self, error_rate: float, apply_errors: bool = True):
+        """
+        Simulates the errors within the pedigree and returns them. Additionally, the errors can be automatically
+        applied if ``apply_errors`` is set to ``True``. The errors can be also applied manually by calling the
+        :meth:`apply_errors` function.
+
+        Args:
+            error_rate: The probability of an individual being connected to a different parent
+            apply_errors: If set to ``True``, the errors will be applied automatically. Default is ``True``.
+
+        Returns:
+            The function returns a list of tuples where every tuple represents an error.
+            The tuple structure is as follows:
+            1) The first value - the child id for which the parents have been changed.
+            2) The second tuple contains the old parent ids. In other words, these are the edges that
+            need to be removed
+            3) The third tuple contains the new parent ids. In other words, these are the edges that
+            need to be added
+        """
+        errors = self._introduce_errors(error_rate=error_rate)
+        if apply_errors:
+            self.apply_errors(errors)
+        return errors

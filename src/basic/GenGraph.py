@@ -13,6 +13,7 @@ class GenGraph(nx.DiGraph):
     """
     The general class for a genealogical directed graph.
     """
+
     def __init__(self, parent_number: int = 2, *args, **kwargs):
         super(GenGraph, self).__init__(*args, **kwargs)
         self.parent_number = parent_number
@@ -400,8 +401,8 @@ class GenGraph(nx.DiGraph):
             parent_number (int): The maximum number of parents an individual can posses. The default is 2.
             probands (Iterable[int]): Optional parameter. The probands for which the ascending graph should be
                                       calculated. By default, all the vertices from the input file are stored.
-            missing_parent_notation The list of text sequences representing that the given individual has no parents.
-                                    If not specified, the default values "-1" and "." are used (meaning that both are
+            missing_parent_notation: The list of text sequences representing that the given individual has no parents.
+                                     If not specified, the default values "-1" and "." are used (meaning that both are
                                     accepted at the same time).
             separation_symbol (str): The symbol used to separate the values in a line. By default, a space is used.
             skip_first_line (bool): Specifies whether the first line in the file should be skipped. Can be useful if the
@@ -492,7 +493,13 @@ class GenGraph(nx.DiGraph):
                 vertices_to_write += [missing_parent_notation] * (self.parent_number - len(parents))
             file.write(f"{separator.join(vertices_to_write)}\n")
 
-    def to_DataFrame(self):
+    def has_edge(self, parent: int, child: int):
+        """
+        Returns: Whether the edge is present in the graph
+        """
+        return super().has_edge(parent, child)
+
+    def to_data_frame(self):
         """
         Convert a GenGraph object to a DataFrame. Formatted for workflows with libraries such as sgkit.
         """
@@ -505,8 +512,8 @@ class GenGraph(nx.DiGraph):
                 parents.append(".")
             # Add the vertex and its parents to the data list
             data.append([vertex] + parents)
-        
+
         df = pd.DataFrame(data, columns=["ID", "SIRE", "DAM"])
         # Replace missing parent indicators as needed to align with sgkit
-        df.replace({"" : ".", None: "."}, inplace=True)
+        df.replace({"": ".", None: "."}, inplace=True)
         return df

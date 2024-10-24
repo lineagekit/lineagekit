@@ -27,3 +27,4 @@ referencing>=0.33.0
 idna>=3.6
 packaging>=23.2
 zipp>=3.18.0
+scipy>=1.13.0

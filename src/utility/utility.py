@@ -1,4 +1,6 @@
 import os
+from scipy.stats import poisson
+import random
 
 
 def get_file_path(input_request: str):
@@ -10,3 +12,10 @@ def get_file_path(input_request: str):
             print("The specified path is not a file, try again")
         else:
             return file_path
+
+
+def random_subselect_poisson(input_list, percentage):
+    n = len(input_list)
+    math_expectation = n * percentage
+    number_of_errors = min(poisson.rvs(math_expectation), n)
+    return random.sample(input_list, number_of_errors)

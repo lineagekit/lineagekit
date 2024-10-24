@@ -9,6 +9,8 @@ from basic.Pedigree import Pedigree
 from basic.PloidPedigree import PloidPedigree
 from basic.CoalescentTree import CoalescentTree
 
+from src.basic.AbstractPedigree import AbstractPedigree
+
 
 @pytest.fixture
 def test_pedigrees():
@@ -309,9 +311,9 @@ def test_saving_to_file(simple_1_haploid, simple_1_missing_parent_notation):
         parsed_graph = Pedigree.get_graph_from_file(filepath=filepath,
                                                     separation_symbol=" ;",
                                                     missing_parent_notation=["!"])
-    except Exception:
+    except Exception as ex:
         os.remove(filepath)
-        pytest.fail("Could not parse the saved file")
+        pytest.fail(f"Could not parse the saved file, the exception: {ex}")
 
     assert networkx.is_isomorphic(graph, parsed_graph)
     os.remove(filepath)
@@ -322,9 +324,9 @@ def test_saving_as_diploid(simple_1):
     simple_1.save_as_diploid(filepath=filepath)
     try:
         parsed_simple_1 = PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath)
-    except Exception:
+    except Exception as ex:
         os.remove(filepath)
-        pytest.fail("Could not parse the saved file")
+        pytest.fail(f"Could not parse the saved file, the exception: {ex}")
     assert networkx.is_isomorphic(simple_1, parsed_simple_1)
     os.remove(filepath)
     individuals_ids = frozenset([1, 3, 4])
@@ -335,11 +337,43 @@ def test_saving_as_diploid(simple_1):
     simple_1.reduce_to_ascending_graph(ploid_ids)
     try:
         parsed_graph = PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath)
-    except Exception:
+    except Exception as ex:
         os.remove(filepath)
-        pytest.fail("Could not parse the saved file")
+        pytest.fail(f"Could not parse the saved file, the exception: {ex}")
     assert networkx.is_isomorphic(simple_1, parsed_graph)
     os.remove(filepath)
+
+
+@pytest.mark.parametrize("data", ["parse_simple_1", "parse_simple_1_haploid",
+                                  "simple_1", "simple_1_haploid"])
+@pytest.mark.parametrize("run", range(30))
+def test_error_simulation(data, run, request):
+    pedigree: AbstractPedigree = request.getfixturevalue(data)
+    simulated_errors = pedigree.introduce_and_record_errors(error_rate=0.5, apply_errors=False)
+
+    def verify_edges(child_vertex, disconnected_vertices, connected_vertices):
+        for disconnected_vertex in disconnected_vertices:
+            assert not pedigree.has_edge(child=child_vertex, parent=disconnected_vertex), \
+                (f"The edge {child_vertex}—{disconnected_vertex} is supposed to be removed from the graph,"
+                 f" but it's present")
+        for connected_vertex in connected_vertices:
+            assert pedigree.has_edge(child=child_vertex, parent=connected_vertex), \
+                (f"The edge {child_vertex}—{connected_vertex} "
+                 f"is supposed to be present in the graph, but it's not")
+
+    for vertex, removed_vertices, add_vertices in simulated_errors:
+        verify_edges(vertex, add_vertices, removed_vertices)
+        # Verify that the new parent is not an old parent
+        assert not [x for x in add_vertices if x in pedigree.get_parents(vertex)]
+        # Verify that the vertices are on the same level
+        for add_vertex, remove_vertex in itertools.product(add_vertices, removed_vertices):
+            assert pedigree.get_vertex_level(add_vertex) == pedigree.get_vertex_level(remove_vertex)
+    pedigree.apply_errors(simulated_errors)
+    for vertex, removed_vertices, add_vertices in simulated_errors:
+        verify_edges(vertex, removed_vertices, add_vertices)
+    pedigree.reverse_errors(simulated_errors)
+    for vertex, removed_vertices, add_vertices in simulated_errors:
+        verify_edges(vertex, add_vertices, removed_vertices)
 
 
 def test_coalescent_tree_parsing(coalescent_tree_1):
