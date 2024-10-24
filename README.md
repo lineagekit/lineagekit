@@ -1,5 +1,3 @@
-
-
 # lineagekit
 A python library with genealogy methods. We will seek to integrate code or functionality or both from:
 

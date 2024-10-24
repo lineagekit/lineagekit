@@ -36,12 +36,12 @@ def get_extensions():
 
 # Setup configuration
 setup(
-    name="kinship",
+    name="lineagekit",
     version="1.0",
     packages=find_packages(where='src'),  # Find all packages under 'src'
     package_dir={'': 'src'},  # Set the package root directory
     ext_modules=get_extensions(),
-    install_requires=parse_requirements('requirements.txt'),  # Ensure pybind11 is installed
+    install_requires=parse_requirements('requirements.txt'),
     package_data={'': ['kinship.pyi']},
     zip_safe=False,
 )

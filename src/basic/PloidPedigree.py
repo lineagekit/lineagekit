@@ -1,7 +1,12 @@
 from __future__ import annotations
+
+import random
+import warnings
 from typing import Iterable
 
 from basic.AbstractPedigree import AbstractPedigree
+
+from src.utility.utility import random_subselect_poisson
 
 
 class PloidPedigree(AbstractPedigree):
@@ -167,3 +172,80 @@ class PloidPedigree(AbstractPedigree):
             The ploids' ids.
         """
         return [2 * x for x in individual_ids] + [2 * x + 1 for x in individual_ids]
+
+    def get_graph_individual_ids(self):
+        """
+        Returns: The individual ids of the vertices of the graph.
+        """
+        return self.get_individual_ids_from_ploids(self.nodes)
+
+    def _introduce_errors(self, error_rate: float):
+        """
+        Simulates the errors within the pedigree and returns them.
+        The errors are simulated using the following approach:
+
+        1) A random number of error events is simulated based on the error rate. Specifically, a random Poisson variate
+         is taken where the math expectation is n * error_rate where n is the number of individuals (not ploids!) in
+         the graph with parents
+        2) For every selected individual v, a random parent w is selected. Then, the corresponding ploid v_p of v that
+         is connected with the w's ploids is disconnected from w and is reconnected with another individual u from
+         the same level. Notice that the actual graph is not changed, this changes will take place once they are applied
+        Below you can find the illustration of these changes:
+            w_1       w_2         # The same level#    u_1     u_2
+             \       /
+              \     /
+               \   /
+                v_p
+        After applying the error:
+            u_1       u_2         # The same level#    w_1     w_2
+             \       /
+              \     /
+               \   /
+                v_p
+
+        Args:
+            error_rate: The probability of an error per individual.
+
+        Returns:
+            The function returns a list of tuples where every tuple represents an error.
+            The tuple structure is as follows:
+            1) The first value - the child ploid id for which the parent ploids have been changed.
+            2) The second tuple contains the old parent ploids ids. In other words, these are the edges that
+            need to be removed
+            3) The third tuple contains the new parent ploid ids. In other words, these are the edges that
+            need to be added
+        """
+        vertices_with_parents = list(self.get_individual_ids_from_ploids((x for x in self if self.has_parents(x))))
+        random_individuals = random_subselect_poisson(vertices_with_parents, error_rate)
+        errors_result_list = []
+        for vertex in random_individuals:
+            # Transforming the ids back-and-forth to traverse the graph
+            vertex_ploids = self.get_ploids_from_individual_ids((vertex,))
+            vertex_parents_ploid_ids = {y for x in vertex_ploids for y in self.get_parents(x)}
+            vertex_parents_individual_ids = list(self.get_individual_ids_from_ploids(vertex_parents_ploid_ids))
+            random_parent = random.sample(vertex_parents_individual_ids, 1)[0]
+            random_parent_ploids = self.get_ploids_from_individual_ids((random_parent,))
+            random_parent_level = self.get_vertex_level(random_parent_ploids[0])
+            random_parent_children_ploids = (x for x in vertex_ploids if self.get_parents(x) == random_parent_ploids)
+            # Generally, the random_parent_children_ploids list contains only one value - the corresponding ploid of
+            # the chosen vertex that is connected to the ploid of the randomly selected parent. However, in some cases,
+            # the same vertex can have the parent specified twice which will make this list contain duplicates
+            child_ploid = next(random_parent_children_ploids)
+            try:
+                new_parent_ploid = self._select_new_parent_from_level(random_parent_level,
+                                                                      vertex_parents_ploid_ids)
+            except ValueError:
+                warnings.warn("One of the errors has been skipped as there were no other "
+                              "candidates for reconnection")
+                continue
+            new_parent = self.get_individual_ids_from_ploids((new_parent_ploid,))
+            new_parent_ploids = self.get_ploids_from_individual_ids(new_parent)
+            # This tuple represents the simulated error:
+            # 1) The first value - the child ploid id for which the parent ploids have been changed.
+            # 2) The second tuple contains the old parent ploids ids. In other words, these are the edges that
+            # have to be removed
+            # 3) The third tuple contains the new parent ploid ids. In other words, these are the edges that
+            # have to be added
+            errors = (child_ploid, tuple(random_parent_ploids), tuple(new_parent_ploids))
+            errors_result_list.append(errors)
+        return errors_result_list
