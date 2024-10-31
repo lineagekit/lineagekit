@@ -6,7 +6,7 @@ from typing import Iterable
 
 from basic.AbstractPedigree import AbstractPedigree
 
-from src.utility.utility import random_subselect_poisson
+from utility.utility import random_subselect_poisson
 
 
 class Pedigree(AbstractPedigree):

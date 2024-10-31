@@ -368,25 +368,6 @@ class GenGraph(nx.DiGraph):
         self.remove_nodes_from(set(self.nodes()).difference(ascending_graph))
 
     @staticmethod
-    def get_graph_from_tree(tree: Tree, probands: Iterable[int] = None) -> GenGraph:
-        """
-        This function builds a simple graph from the given tskit tree. Every node in the tree is treated as
-        haploid.
-
-        Args:
-            tree (Tree): The tskit tree to be used.
-            probands (Iterable[int]): Optional parameter. If specified, the resulting graph is reduced, so that only
-                                      the ascending graph for the given list of probands is returned.
-
-        Returns:
-            The obtained GenGraph.
-        """
-        result_graph = GenGraph(tree.parent_dict.items())
-        if probands is not None:
-            result_graph.reduce_to_ascending_graph(probands=probands)
-        return result_graph
-
-    @staticmethod
     def get_graph_from_file(filepath: str, parent_number: int = 2, probands: Iterable[int] = None,
                             missing_parent_notation=None, separation_symbol=' ', skip_first_line: bool = False) \
             -> GenGraph:

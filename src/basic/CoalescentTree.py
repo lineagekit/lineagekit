@@ -109,9 +109,11 @@ class CoalescentTree(GenGraph):
         Returns:
             The resulting tree.
         """
-        genealogical_graph = GenGraph.get_graph_from_tree(tree=tree, probands=probands)
         result = CoalescentTree()
-        result.update(genealogical_graph)
+        for child, parent in tree.parent_dict.items():
+            result.add_edge(parent=parent, child=child)
+        if probands:
+            result.reduce_to_ascending_graph(probands)
         return result
 
     @staticmethod
