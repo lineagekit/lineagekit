@@ -97,6 +97,21 @@ class CoalescentTree(GenGraph):
         """
         return nx.shortest_path(self, source=source, target=target)
 
+    def merge_edge(self, parent: int, child: int):
+        """
+        This method merges the specified edge in the tree. The purpose of this function is to model a
+        common error in an ARG, where what was intended to be an edge is, in reality, just a vertex.
+        Args:
+            parent: The parent vertex of the edge.
+            child: The child vertex of the edge
+        """
+        child_children = self.get_children(child)
+        if not child_children:
+            raise ValueError(f"The specified {child}-{parent} edge is a proband edge")
+        self.add_edges_from((parent, child_child) for child_child in child_children)
+        self.remove_edges_from((child, child_child) for child_child in child_children)
+        self.remove_edge(parent=parent, child=child)
+
     @staticmethod
     def get_coalescent_tree(tree: Tree, probands: Iterable[int] = None) -> CoalescentTree:
         """

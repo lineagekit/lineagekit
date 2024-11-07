@@ -13,7 +13,7 @@ def parse_requirements(filename):
 if sys.platform == "win32":
     compile_args = ["/std:c++17", "/O3"]
 else:
-    compile_args = ["-std=c++17", "-O3", "-fPIC"]
+    compile_args = ["-std=c++17", "-O3"]
 
 
 # Define the extension modules

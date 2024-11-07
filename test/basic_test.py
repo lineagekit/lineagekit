@@ -1,4 +1,5 @@
 import itertools
+import random
 from typing import Iterable
 
 import networkx
@@ -384,6 +385,16 @@ def test_coalescent_tree_parsing(coalescent_tree_1):
     assert networkx.is_isomorphic(copy_tree, coalescent_tree_1)
     assert (frozenset(coalescent_tree_1.get_largest_clade_by_size()) ==
             frozenset(coalescent_tree_1.get_largest_clade_by_probands()))
+    new_vertex = -1
+    vertex_to_remove = 8
+    coalescent_tree_1.add_edge(parent=new_vertex, child=vertex_to_remove)
+    current_children = coalescent_tree_1.get_children(vertex_to_remove)
+    coalescent_tree_1.merge_edge(parent=new_vertex, child=vertex_to_remove)
+    for child in current_children:
+        assert vertex_to_remove not in coalescent_tree_1.get_parents(child)
+        assert new_vertex in coalescent_tree_1.get_parents(child)
+        assert child not in coalescent_tree_1.get_children(vertex_to_remove)
+        assert child in coalescent_tree_1.get_children(new_vertex)
 
 
 def test_coalescent_tree_2(coalescent_tree_2):
