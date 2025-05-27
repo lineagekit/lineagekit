@@ -1,4 +1,4 @@
-from basic.GenGraph import GenGraph
+from lineagekit.core.GenGraph import GenGraph
 
 # Ask the user to specify the path to the pedigree
 genealogy_path = input("Specify the path to the genealogy file: ")

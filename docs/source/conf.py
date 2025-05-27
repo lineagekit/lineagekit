@@ -1,8 +1,7 @@
 import os
 import sys
 
-# TODO: Remove the manual path manipulation
-sys.path.insert(0, os.path.abspath('../../src/basic/'))
+sys.path.insert(0, os.path.abspath('../../src/core/'))
 
 # Configuration file for the Sphinx documentation builder.
 #

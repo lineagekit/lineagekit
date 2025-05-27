@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import itertools
+import warnings
+from typing import Iterable, Callable, TextIO
 
 import networkx as nx
 import pandas as pd
-from tskit import Tree
-import warnings
-from typing import Iterable, Callable, TextIO
 
 
 class GenGraph(nx.DiGraph):
@@ -252,6 +251,14 @@ class GenGraph(nx.DiGraph):
         """
         return list(self.successors(vertex))
 
+    def get_parents_for_list(self, vertices):
+        """Returns the list of all parents for the given list of vertices."""
+        return list(itertools.chain.from_iterable(map(self.successors, vertices)))
+
+    def get_children_for_list(self, vertices):
+        """Returns the list of all children for the given list of vertices."""
+        return list(itertools.chain.from_iterable(map(self.successors, vertices)))
+
     def has_children(self, vertex):
         """
         Returns:
@@ -266,7 +273,7 @@ class GenGraph(nx.DiGraph):
         """
         return any(self.predecessors(vertex))
 
-    def is_orphan(self, vertex: int):
+    def is_founder(self, vertex: int):
         """
         Returns:
             True if the specified vertex has no parents, False otherwise.
@@ -287,7 +294,7 @@ class GenGraph(nx.DiGraph):
         """
         return [node for node, out_degree in self.out_degree if out_degree == 0]
 
-    def get_orphans(self):
+    def get_founders(self):
         """
         Returns:
             The vertices that don't have parents.
@@ -366,6 +373,17 @@ class GenGraph(nx.DiGraph):
         """
         ascending_graph = self.get_ascending_vertices_from_probands(probands)
         self.remove_nodes_from(set(self.nodes()).difference(ascending_graph))
+
+    def get_descendants_for_vertex(self, vertex_id: int):
+        """
+        The method returns all the descendants of the given vertex.
+        Args:
+            vertex_id: The ID of the vertex.
+
+        Returns:
+            Set containing the descendants of the given vertex.
+        """
+        return nx.descendants(self, vertex_id)
 
     @staticmethod
     def get_graph_from_file(filepath: str, parent_number: int = 2, probands: Iterable[int] = None,

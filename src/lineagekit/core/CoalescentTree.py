@@ -1,8 +1,11 @@
 from __future__ import annotations
+
 import networkx as nx
 from typing import Iterable
 
-from basic.GenGraph import GenGraph, Tree
+from tskit import Tree
+
+from lineagekit.core.GenGraph import GenGraph
 
 
 class CoalescentTree(GenGraph):
@@ -13,6 +16,11 @@ class CoalescentTree(GenGraph):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.parent_number = 1
+
+    def copy(self, as_view=False):
+        copied_graph = super().copy(as_view=False)
+        copied_graph.parent_number = self.parent_number
+        return copied_graph
 
     def get_largest_clade_by_size(self) -> [int]:
         """
@@ -111,6 +119,42 @@ class CoalescentTree(GenGraph):
         self.add_edges_from((parent, child_child) for child_child in child_children)
         self.remove_edges_from((child, child_child) for child_child in child_children)
         self.remove_edge(parent=parent, child=child)
+
+    def get_vertex_parent(self, vertex_id: int) -> int:
+        """
+        This function returns the unique parent vertex of the given vertex.
+        Args:
+            vertex_id: The child vertex id.
+
+        Returns:
+            The parent vertex id.
+        """
+        vertex_parents = self.get_parents(vertex_id)
+        if len(vertex_parents) > 1:
+            raise Exception(f"The tree is invalid, the vertex {vertex_id} has multiple parents")
+        if not vertex_parents:
+            return None
+        return vertex_parents[0]
+
+    def subdivide_tree(self, edge_child_vertex: int) -> (CoalescentTree, CoalescentTree):
+        """
+        This method creates the two trees by removing the specified edge.
+
+        Args:
+            edge_child_vertex: The child vertex of the edge. Notice that in a coalescent tree, the edge
+            can be identified by the id of its child vertex.
+
+        Returns:
+            The two trees that are obtained by removing the edge. The first tree corresponds to the
+            upper subtree, the second tree corresponds to the lower subtree.
+        """
+        bottom_tree = self.get_descendants_for_vertex(edge_child_vertex)
+        other_vertices = set(self.nodes) - bottom_tree
+        bottom_tree = self.copy()
+        upper_tree = self.copy()
+        bottom_tree.remove_nodes_from(other_vertices)
+        upper_tree.remove_nodes_from(bottom_tree)
+        return upper_tree, bottom_tree
 
     @staticmethod
     def get_coalescent_tree(tree: Tree, probands: Iterable[int] = None) -> CoalescentTree:

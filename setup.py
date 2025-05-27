@@ -19,7 +19,7 @@ else:
 # Define the extension modules
 def get_extensions():
     ext_modules = []
-    kinship_core_dir = os.path.join('src', 'basic', 'kinship_core')
+    kinship_core_dir = os.path.join('src', 'lineagekit', 'core', 'kinship_core')
 
     ext_modules.append(
         Extension(
