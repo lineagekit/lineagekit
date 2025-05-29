@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import itertools
 import warnings
+from pathlib import Path
 from typing import Iterable, Callable, TextIO
 
 import networkx as nx
@@ -15,17 +16,17 @@ class GenGraph(nx.DiGraph):
 
     def __init__(self, parent_number: int = 2, *args, **kwargs):
         super(GenGraph, self).__init__(*args, **kwargs)
-        self.parent_number = parent_number
-        self.vertex_to_level_map = dict()
-        self.levels = []
-        self.levels_valid = False
+        self._parent_number = parent_number
+        self._vertex_to_level_map = dict()
+        self._levels = []
+        self._levels_valid = False
 
     def copy(self, as_view=False):
         # TODO: Implement the non-copying version
         copied_graph = super().copy(as_view=False)
-        copied_graph.vertex_to_level_map = dict(self.vertex_to_level_map)
-        copied_graph.levels = list(self.levels)
-        copied_graph.levels_valid = self.levels_valid
+        copied_graph.vertex_to_level_map = dict(self._vertex_to_level_map)
+        copied_graph.levels = list(self._levels)
+        copied_graph.levels_valid = self._levels_valid
         return copied_graph
 
     def _initialize_vertex_to_level_map(self):
@@ -39,30 +40,30 @@ class GenGraph(nx.DiGraph):
         in a graph.
         """
         probands = self.get_sink_vertices()
-        self.levels = []
+        self._levels = []
         current_level = 1
-        self.vertex_to_level_map = {x: 0 for x in probands}
+        self._vertex_to_level_map = {x: 0 for x in probands}
         current_level_vertices = probands
         while current_level_vertices:
             current_level_vertices = set(itertools.chain.from_iterable(
                 [self.get_parents(x) for x in current_level_vertices])
             )
             for vertex in current_level_vertices:
-                self.vertex_to_level_map[vertex] = current_level
+                self._vertex_to_level_map[vertex] = current_level
             current_level += 1
-            self.levels.append([])
-        for vertex, level in self.vertex_to_level_map.items():
-            self.levels[level].append(vertex)
-        self.levels_valid = True
+            self._levels.append([])
+        for vertex, level in self._vertex_to_level_map.items():
+            self._levels[level].append(vertex)
+        self._levels_valid = True
 
     def _invalidate_levels(self):
         """
         Invalidates the levels, causing them to be recalculated on the next request.
         """
-        if self.levels_valid:
-            self.levels = None
-            self.vertex_to_level_map = None
-            self.levels_valid = False
+        if self._levels_valid:
+            self._levels = None
+            self._vertex_to_level_map = None
+            self._levels_valid = False
 
     def get_levels(self):
         """
@@ -72,9 +73,9 @@ class GenGraph(nx.DiGraph):
         Returns:
             The graph's levels.
         """
-        if not self.levels_valid:
+        if not self._levels_valid:
             self._initialize_vertex_to_level_map()
-        return self.levels
+        return self._levels
 
     def get_ascending_graph_from_vertices_by_levels(self, vertices: Iterable[int]):
         """
@@ -119,20 +120,9 @@ class GenGraph(nx.DiGraph):
         Returns:
             The level of the specified vertex.
         """
-        if not self.levels_valid:
+        if not self._levels_valid:
             self._initialize_vertex_to_level_map()
-        return self.vertex_to_level_map[vertex]
-
-    def is_founder(self, vertex: int):
-        """
-        Args:
-            vertex (int): The vertex id.
-
-        Returns:
-             True if the vertex belongs to the top level of the graph, False otherwise.
-        """
-        vertex_level = self.get_vertex_level(vertex)
-        return vertex_level == len(self.levels) - 1
+        return self._vertex_to_level_map[vertex]
 
     def add_edge(self, child: int, parent: int, **attr) -> None:
         """
@@ -158,14 +148,39 @@ class GenGraph(nx.DiGraph):
         super().remove_edge(parent, child)
         self._invalidate_levels()
 
+    def add_edges_from(self, ebunch_to_add, **attr):
+        """
+        Removes the edges and invalidates the levels.
+
+        Args:
+            ebunch_to_add: The edges to be removed.
+            attr: keyword arguments, optional
+                  Edge data (or labels or objects) can be assigned using keyword arguments.
+        """
+        super().add_edges_from(ebunch_to_add, **attr)
+        self._invalidate_levels()
+
     def remove_edges_from(self, ebunch):
         """
         Removes the edges and invalidates the levels.
 
         Args:
-            ebunch (Iterable[int]): The edges to be removed.
+            ebunch: The edges to be removed.
         """
         super().remove_edges_from(ebunch)
+        self._invalidate_levels()
+
+    def add_node(self, node_for_adding, **attr):
+        # TODO: Verify that no new edges can be added this way
+        vertex_already_present = node_for_adding in self
+        super().add_node(node_for_adding, **attr)
+        if not vertex_already_present and self._levels_valid:
+            self._levels[0].add(node_for_adding)
+            self._vertex_to_level_map[node_for_adding] = 0
+
+    def add_nodes_from(self, nodes_for_adding, **attr):
+        # TODO: Avoid invalidating the levels
+        super().add_nodes_from(nodes_for_adding, **attr)
         self._invalidate_levels()
 
     def remove_node(self, vertex):
@@ -205,6 +220,12 @@ class GenGraph(nx.DiGraph):
             node (int): The node to be removed.
         """
         self.remove_edges_from(list(self.in_edges(node)))
+
+    def remove_isolated_vertices(self):
+        """
+        Removes all isolated vertices.
+        """
+        self.remove_nodes_from(list(nx.isolates(self)))
 
     def add_children(self, parent: int, children: Iterable[int], **attr) -> None:
         """
@@ -385,8 +406,17 @@ class GenGraph(nx.DiGraph):
         """
         return nx.descendants(self, vertex_id)
 
+    def reduce_to_subgraph(self, subgraph_vertices):
+        """
+        Takes the induced subgraph using the passed vertices.
+        Args:
+            subgraph_vertices: The vertices in the subgraph
+        """
+        vertices_to_remove = set(self.nodes()).difference(subgraph_vertices)
+        self.remove_nodes_from(vertices_to_remove)
+
     @staticmethod
-    def get_graph_from_file(filepath: str, parent_number: int = 2, probands: Iterable[int] = None,
+    def get_graph_from_file(filepath: str | Path, parent_number: int = 2, probands: Iterable[int] = None,
                             missing_parent_notation=None, separation_symbol=' ', skip_first_line: bool = False) \
             -> GenGraph:
         """
@@ -437,7 +467,7 @@ class GenGraph(nx.DiGraph):
         self.remove_edges_to_parents(vertex)
 
     @staticmethod
-    def _read_file_and_parse_lines(filepath: str, skip_first_line: bool,
+    def _read_file_and_parse_lines(filepath: str | Path, skip_first_line: bool,
                                    parse_operation: Callable[[str], None]):
         with open(filepath, 'r') as file:
             first_line = file.readline()
@@ -466,31 +496,59 @@ class GenGraph(nx.DiGraph):
             if parent not in missing_parent_notation:
                 self.add_edge(child=child, parent=parent)
 
-    def save_to_file(self, filename: str, separator: str = ' ', missing_parent_notation: str = "-1"):
+    def save_ascending_graph_to_file(self, vertices: Iterable[int], filepath: str | Path,
+                                     separator: str = ' ', missing_parent_notation: str = "-1"):
         """
-        Saves the graph to a file.
+        Saves the graph ascending from the given vertices to a file.
 
         Args:
-            filename (str): The path of the resulting file.
+            vertices (Iterable[int]): The vertices for which the ascending graph should be saved.
+            filepath (str): The path of the resulting file.
             separator (str): The string used to separate the columns in the file. The default is ' '.
             missing_parent_notation (str): The string used to indicate that the parent is not known.
                                            The default is "-1".
         """
-        file = open(filename, 'w')
-        self._save_graph_to_file(file=file, separator=separator, missing_parent_notation=missing_parent_notation)
-        file.close()
+        ascending_vertices = self.get_ascending_vertices_from_probands(probands=vertices)
+        self.save_vertices_to_file(vertices=ascending_vertices, filepath=filepath,
+                                   separator=separator, missing_parent_notation=missing_parent_notation)
 
-    def _save_graph_to_file(self, file: TextIO, separator: str = ' ', missing_parent_notation: str = "-1"):
+    def save_to_file(self, filepath: str | Path, separator: str = ' ', missing_parent_notation: str = "-1"):
         """
         Saves the graph to a file.
+
+        Args:
+            filepath (str): The path of the resulting file.
+            separator (str): The string used to separate the columns in the file. The default is ' '.
+            missing_parent_notation (str): The string used to indicate that the parent is not known.
+                                           The default is "-1".
         """
-        for vertex in self.nodes:
-            parents = self.get_parents(vertex)
-            vertices_to_write = [vertex] + parents
-            vertices_to_write = [str(vertex) for vertex in vertices_to_write]
-            if missing_parent_notation is not None and len(parents) < self.parent_number:
-                vertices_to_write += [missing_parent_notation] * (self.parent_number - len(parents))
-            file.write(f"{separator.join(vertices_to_write)}\n")
+        with open(filepath, 'w') as file:
+            self._write_vertices_to_file(file=file, vertices=self.nodes, separator=separator,
+                                         missing_parent_notation=missing_parent_notation)
+
+    def _save_vertex_to_file(self, file: TextIO, vertex: int, separator: str = ' ',
+                             missing_parent_notation: str = "-1"):
+        parents = self.get_parents(vertex)
+        vertices_to_write = [vertex] + parents
+        vertices_to_write = [str(vertex) for vertex in vertices_to_write]
+        if missing_parent_notation is not None and len(parents) < self._parent_number:
+            vertices_to_write += [missing_parent_notation] * (self._parent_number - len(parents))
+        file.write(f"{separator.join(vertices_to_write)}\n")
+
+    def save_vertices_to_file(self, filepath: str | Path, vertices: Iterable[int],
+                              separator: str = ' ', missing_parent_notation: str = "-1"):
+        with open(filepath, 'w') as file:
+            self._write_vertices_to_file(file=file, separator=separator, vertices=vertices,
+                                         missing_parent_notation=missing_parent_notation)
+
+    def _write_vertices_to_file(self, file: TextIO, vertices: Iterable[int],
+                                separator: str = ' ', missing_parent_notation: str = "-1"):
+        """
+        Writes the given vertices to file.
+        """
+        for vertex in vertices:
+            self._save_vertex_to_file(file=file, vertex=vertex, separator=separator,
+                                      missing_parent_notation=missing_parent_notation)
 
     def has_edge(self, parent: int, child: int):
         """

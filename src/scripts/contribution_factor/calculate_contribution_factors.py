@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 from lineagekit.core.Pedigree import Pedigree
-from utility.utility import get_file_path, get_non_existing_path
+from lineagekit.utility.utility import get_file_path, get_non_existing_path
 
 results_dir_name = "results"
 

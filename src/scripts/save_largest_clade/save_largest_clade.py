@@ -1,6 +1,6 @@
 from lineagekit.core.CoalescentTree import CoalescentTree
 from lineagekit.core.PloidPedigree import PloidPedigree
-from utility.utility import *
+from lineagekit.utility.utility import *
 
 
 def save_largest_clade_and_get_probands():

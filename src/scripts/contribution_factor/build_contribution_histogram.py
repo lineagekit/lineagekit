@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import csv
 
-from utility.utility import get_file_path, get_non_existing_path
+from lineagekit.utility.utility import get_file_path, get_non_existing_path
 
 results_dir = "results"
 matplotlib.use("TkAgg")

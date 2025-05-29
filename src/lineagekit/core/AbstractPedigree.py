@@ -2,7 +2,7 @@ from collections import defaultdict
 from enum import Enum
 from typing import Iterable
 
-import kinship
+from lineagekit import kinship
 import numpy as np
 
 from lineagekit.core.GenGraph import GenGraph

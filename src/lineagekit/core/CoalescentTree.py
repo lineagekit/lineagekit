@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import networkx as nx
 from typing import Iterable
 
-from tskit import Tree
+from tskit import Tree, TreeSequence
 
 from lineagekit.core.GenGraph import GenGraph
 
@@ -14,12 +16,11 @@ class CoalescentTree(GenGraph):
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.parent_number = 1
+        super().__init__(parent_number=1, *args, **kwargs)
 
     def copy(self, as_view=False):
         copied_graph = super().copy(as_view=False)
-        copied_graph.parent_number = self.parent_number
+        copied_graph._parent_number = self._parent_number
         return copied_graph
 
     def get_largest_clade_by_size(self) -> [int]:
@@ -44,6 +45,23 @@ class CoalescentTree(GenGraph):
         clades = self.get_connected_components()
         largest_clade = max(clades, key=lambda clade: intersection_size(clade))
         return largest_clade
+
+    def get_root_vertex(self) -> int:
+        """
+        Returns:
+            The root vertex of the tree consisting of a single clade. If the root cannot be determined, the
+            method throws an exception.
+
+        Raises:
+            ValueError: If the tree has multiple source vertices or the tree is empty.
+        """
+        founders = self.get_founders()
+        if len(founders) > 1:
+            raise ValueError("There are multiple source vertices in the tree")
+        if not founders:
+            assert self.get_vertices_number() == 0
+            raise ValueError("The tree is empty")
+        return founders[0]
 
     def get_root_for_clade(self, clade: [int]) -> int:
         """
@@ -120,7 +138,31 @@ class CoalescentTree(GenGraph):
         self.remove_edges_from((child, child_child) for child_child in child_children)
         self.remove_edge(parent=parent, child=child)
 
-    def get_vertex_parent(self, vertex_id: int) -> int:
+    def unmerge_edge(self, child: int) -> int:
+        def get_new_vertex_id():
+            return max(self.nodes()) + 1
+
+        child_parent = self.get_parents(child)
+        if not child_parent:
+            raise Exception(f"The specified vertex {child} does not have a parent")
+        child_parent = child_parent[0]
+        child_parent_children = self.get_children(child_parent)
+        if len(child_parent_children) < 3:
+            raise Exception(f"The specified vertex {child} is not a part of a polytomy")
+        self.remove_edge(parent=child_parent, child=child)
+        new_vertex_id = get_new_vertex_id()
+        self.add_edge(parent=new_vertex_id, child=child)
+        child_parent_parent = self.get_parents(child_parent)
+        if child_parent_parent:
+            child_parent_parent = child_parent_parent[0]
+            self.remove_edge(parent=child_parent_parent, child=child_parent)
+            self.add_edge(parent=child_parent_parent, child=new_vertex_id)
+        else:
+            self.remove_edges_to_parents(child_parent)
+        self.add_edge(parent=new_vertex_id, child=child_parent)
+        return new_vertex_id
+
+    def get_vertex_parent(self, vertex_id: int) -> int | None:
         """
         This function returns the unique parent vertex of the given vertex.
         Args:
@@ -148,12 +190,15 @@ class CoalescentTree(GenGraph):
             The two trees that are obtained by removing the edge. The first tree corresponds to the
             upper subtree, the second tree corresponds to the lower subtree.
         """
-        bottom_tree = self.get_descendants_for_vertex(edge_child_vertex)
-        other_vertices = set(self.nodes) - bottom_tree
-        bottom_tree = self.copy()
-        upper_tree = self.copy()
+        bottom_tree_vertices = list(self.get_descendants_for_vertex(edge_child_vertex))
+        bottom_tree_vertices.append(edge_child_vertex)
+        other_vertices = set(self.nodes).difference(bottom_tree_vertices)
+        bottom_tree: CoalescentTree = self.copy()
+        upper_tree: CoalescentTree = self.copy()
         bottom_tree.remove_nodes_from(other_vertices)
-        upper_tree.remove_nodes_from(bottom_tree)
+        upper_tree.remove_nodes_from(bottom_tree_vertices)
+        upper_tree.remove_unary_nodes()
+        bottom_tree.remove_unary_nodes()
         return upper_tree, bottom_tree
 
     @staticmethod
@@ -176,14 +221,31 @@ class CoalescentTree(GenGraph):
         return result
 
     @staticmethod
-    def get_coalescent_tree_from_file(filepath: str, probands: Iterable[int] = None) -> CoalescentTree:
+    def get_arg(tree_sequence: TreeSequence):
+        # TODO: Consider creating a separate ARG class
+        first_tree = tree_sequence.first()
+        coalescent_tree = CoalescentTree.get_coalescent_tree(first_tree)
+        present_edges = {(key, value) for key, value in first_tree.parent_dict.items()}
+        for tree in tree_sequence.trees():
+            for (child, parent) in tree.parent_dict.items():
+                if not (child, parent) in present_edges:
+                    coalescent_tree.add_edge(child=child, parent=parent)
+        return coalescent_tree
+
+    @staticmethod
+    def get_coalescent_tree_from_file(filepath: str | Path, probands: Iterable[int] = None,
+                                      missing_parent_notation=None, separation_symbol=' ',
+                                      skip_first_line: bool = False) -> CoalescentTree:
         """
         Utility function to get a coalescent tree from a file.
 
         The format of the file is as follows:
         child parent
         """
-        pedigree: GenGraph = GenGraph.get_graph_from_file(filepath=filepath, probands=probands, parent_number=1)
+        pedigree: GenGraph = GenGraph.get_graph_from_file(filepath=filepath, probands=probands, parent_number=1,
+                                                          missing_parent_notation=missing_parent_notation,
+                                                          separation_symbol=separation_symbol,
+                                                          skip_first_line=skip_first_line)
         result = CoalescentTree()
         result.update(pedigree)
         return result

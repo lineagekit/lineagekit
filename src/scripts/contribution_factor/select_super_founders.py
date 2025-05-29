@@ -1,7 +1,7 @@
 import csv
 import os
 
-from utility.utility import get_file_path, get_float_value, get_non_existing_path, \
+from lineagekit.utility.utility import get_file_path, get_float_value, get_non_existing_path, \
     get_natural_number_input_in_bounds, get_natural_number_input
 
 results_dir_name = "results"
