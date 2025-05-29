@@ -1,21 +1,20 @@
 import itertools
-import random
+import os
 from typing import Iterable
 
 import networkx
 import pytest
-import os
-from basic.GenGraph import GenGraph
-from basic.Pedigree import Pedigree
-from basic.PloidPedigree import PloidPedigree
-from basic.CoalescentTree import CoalescentTree
+from lineagekit.core.CoalescentTree import CoalescentTree
+from lineagekit.core.GenGraph import GenGraph
+from lineagekit.core.Pedigree import Pedigree
+from lineagekit.core.PloidPedigree import PloidPedigree
 
-from src.basic.AbstractPedigree import AbstractPedigree
+from lineagekit.core.AbstractPedigree import AbstractPedigree
 
 
 @pytest.fixture
-def test_pedigrees():
-    return os.path.join(os.path.dirname(__file__), "test_pedigrees")
+def test_data():
+    return os.path.join(os.path.dirname(__file__), "test_data")
 
 
 @pytest.fixture()
@@ -24,16 +23,16 @@ def simple_1_missing_parent_notation():
 
 
 @pytest.fixture
-def parse_simple_1(test_pedigrees, simple_1_missing_parent_notation) -> PloidPedigree:
-    filepath = f"{test_pedigrees}/simple_1.txt"
+def parse_simple_1(test_data, simple_1_missing_parent_notation) -> PloidPedigree:
+    filepath = f"{test_data}/simple_1.txt"
 
     return PloidPedigree.get_ploid_pedigree_from_file(filepath=filepath,
                                                       missing_parent_notation=simple_1_missing_parent_notation)
 
 
 @pytest.fixture
-def parse_simple_1_haploid(test_pedigrees, simple_1_missing_parent_notation) -> Pedigree:
-    filepath = f"{test_pedigrees}/simple_1.txt"
+def parse_simple_1_haploid(test_data, simple_1_missing_parent_notation) -> Pedigree:
+    filepath = f"{test_data}/simple_1.txt"
 
     return Pedigree.get_pedigree_graph_from_file(filepath=filepath,
                                                  missing_parent_notation=simple_1_missing_parent_notation)
@@ -45,9 +44,9 @@ def parse_simple_1_haploid_ascending_proband() -> Iterable[int]:
 
 
 @pytest.fixture
-def parse_simple_1_haploid_ascending(test_pedigrees, parse_simple_1_haploid_ascending_proband,
+def parse_simple_1_haploid_ascending(test_data, parse_simple_1_haploid_ascending_proband,
                                      simple_1_missing_parent_notation) -> Pedigree:
-    filepath = f"{test_pedigrees}/simple_1.txt"
+    filepath = f"{test_data}/simple_1.txt"
 
     return Pedigree.get_pedigree_graph_from_file(filepath=filepath,
                                                  probands=parse_simple_1_haploid_ascending_proband,
@@ -70,8 +69,8 @@ def simple_1_haploid_ascending(parse_simple_1_haploid_ascending) -> Pedigree:
 
 
 @pytest.fixture
-def parse_coalescent_tree_1(test_pedigrees) -> CoalescentTree:
-    filepath = f"{test_pedigrees}/coalescent_tree_1.txt"
+def parse_coalescent_tree_1(test_data) -> CoalescentTree:
+    filepath = f"{test_data}/coalescent_tree_1.txt"
     return CoalescentTree.get_coalescent_tree_from_file(filepath=filepath)
 
 
@@ -81,8 +80,8 @@ def coalescent_tree_1(parse_coalescent_tree_1) -> CoalescentTree:
 
 
 @pytest.fixture
-def parse_coalescent_tree_2(test_pedigrees) -> CoalescentTree:
-    filepath = f"{test_pedigrees}/coalescent_tree_2.txt"
+def parse_coalescent_tree_2(test_data) -> CoalescentTree:
+    filepath = f"{test_data}/coalescent_tree_2.txt"
     return CoalescentTree.get_coalescent_tree_from_file(filepath=filepath)
 
 
@@ -140,8 +139,8 @@ def test_ascending_genealogy_does_not_throw_exceptions_for_non_existing_vertices
     assert set(ascending_genealogy) == {1, 2, 6, 7, 10, 11}
 
 
-def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, simple_1_missing_parent_notation):
-    filepath = f"{test_pedigrees}/simple_1.txt"
+def test_diploid_graph_parsing_and_basic_functions(test_data, simple_1, simple_1_missing_parent_notation):
+    filepath = f"{test_data}/simple_1.txt"
     missing_parent_notation = simple_1_missing_parent_notation
     graph = simple_1
     assert graph.verify_max_parents_number(2)
@@ -196,7 +195,7 @@ def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, sim
     for non_sink_vertex in graph_nodes.difference(sink_vertices):
         assert graph.get_children(non_sink_vertex)
         assert graph.has_children(non_sink_vertex)
-    orphans = set(graph.get_orphans())
+    orphans = set(graph.get_founders())
     # One of the ploid for 4 and 5 have no parents.Since we don't want to rely on the implementation,
     # we will verify it this way
     orphans_superset = transform_individual_ids_into_ploids([4, 5, 7, 9, 10, 11])
@@ -207,11 +206,11 @@ def test_diploid_graph_parsing_and_basic_functions(test_pedigrees, simple_1, sim
     for orphan in orphans:
         assert not graph.get_parents(orphan)
         assert not graph.has_parents(orphan)
-        assert graph.is_orphan(orphan)
+        assert graph.is_founder(orphan)
     for non_orphan in graph_nodes.difference(orphans):
         assert graph.get_parents(non_orphan)
         assert graph.has_parents(non_orphan)
-        assert not graph.is_orphan(non_orphan)
+        assert not graph.is_founder(non_orphan)
 
 
 def test_ascending_genealogy_reduction(simple_1_haploid):
@@ -258,12 +257,12 @@ def haploid_child_parent_relationship_consistent(graph: GenGraph, child: int, pa
         and graph.is_parent(parent=parent, child=child)
 
 
-def test_ploid_parsing(test_pedigrees, simple_1_missing_parent_notation, simple_1_haploid):
+def test_ploid_parsing(test_data, simple_1_missing_parent_notation, simple_1_haploid):
     assert simple_1_haploid.get_vertices_number() == 11, (f"Expected 11 vertices in the graph, "
                                                           f"got {simple_1_haploid.get_vertices_number()}")
     assert set(simple_1_haploid.nodes()) == set(range(1, 12)), (f"Expected vertices from 1 to 11, "
                                                                 f"got {simple_1_haploid.nodes()}")
-    filepath = f"{test_pedigrees}/simple_1.txt"
+    filepath = f"{test_data}/simple_1.txt"
     missing_parent_notation = simple_1_missing_parent_notation
     graph = simple_1_haploid
     lines = open(filepath, 'r').readlines()

@@ -1,7 +1,7 @@
 import itertools
 
-from basic.Pedigree import Pedigree
-from utility.utility import *
+from lineagekit.core.Pedigree import Pedigree
+from lineagekit.utility.utility import *
 import time
 
 filepath = get_file_path("Specify the path to the pedigree:")

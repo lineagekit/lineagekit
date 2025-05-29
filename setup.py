@@ -1,47 +1,23 @@
-import os
-import sys
-from setuptools import setup, Extension, find_packages
+from setuptools import setup, Extension
 import pybind11
+import sys
+import os
 
+compile_args = ["/std:c++17", "/O3"] if sys.platform == "win32" else ["-std=c++17", "-O3"]
+kinship_core_path = os.path.join("src", "lineagekit", "core", "kinship_core")
+source_files = [os.path.join(kinship_core_path, "kinship.cpp")]
+library_paths = [kinship_core_path]
+include_dirs = [pybind11.get_include()]
+include_dirs.extend(library_paths)
 
-def parse_requirements(filename):
-    with open(filename, 'r') as f:
-        return f.read().splitlines()
-
-
-# Determine the appropriate compiler flags based on the operating system
-if sys.platform == "win32":
-    compile_args = ["/std:c++17", "/O3"]
-else:
-    compile_args = ["-std=c++17", "-O3"]
-
-
-# Define the extension modules
-def get_extensions():
-    ext_modules = []
-    kinship_core_dir = os.path.join('src', 'basic', 'kinship_core')
-
-    ext_modules.append(
-        Extension(
-            "kinship",
-            [os.path.join(kinship_core_dir, "kinship.cpp")],  # C++ source file
-            include_dirs=[pybind11.get_include()],  # Include directories for pybind11
-            language="c++",
-            extra_compile_args=compile_args,  # Compiler flags
-        )
+ext_modules = [
+    Extension(
+        "lineagekit.kinship",
+        source_files,
+        include_dirs=include_dirs,
+        language="c++",
+        extra_compile_args=compile_args,
     )
+]
 
-    return ext_modules
-
-
-# Setup configuration
-setup(
-    name="lineagekit",
-    version="1.0",
-    packages=find_packages(where='src'),  # Find all packages under 'src'
-    package_dir={'': 'src'},  # Set the package root directory
-    ext_modules=get_extensions(),
-    install_requires=parse_requirements('requirements.txt'),
-    package_data={'': ['kinship.pyi']},
-    zip_safe=False,
-)
+setup(ext_modules=ext_modules)

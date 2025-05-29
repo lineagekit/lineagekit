@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import random
 import warnings
+from pathlib import Path
 from typing import Iterable
 
-from basic.AbstractPedigree import AbstractPedigree
+from lineagekit.core.AbstractPedigree import AbstractPedigree
 
-from src.utility.utility import random_subselect_poisson
+from lineagekit.utility.utility import random_subselect_poisson
 
 
 class PloidPedigree(AbstractPedigree):
@@ -18,7 +19,7 @@ class PloidPedigree(AbstractPedigree):
         super().__init__(*args, **kwargs)
 
     @staticmethod
-    def get_ploid_pedigree_from_file(filepath: str, probands: Iterable[int] = None,
+    def get_ploid_pedigree_from_file(filepath: str | Path, probands: Iterable[int] = None,
                                      missing_parent_notation=None, separation_symbol=' ',
                                      skip_first_line: bool = False) -> PloidPedigree:
         """
@@ -88,7 +89,9 @@ class PloidPedigree(AbstractPedigree):
                 parent = int(parent)
                 self.add_edge(child=child_ploid, parent=2 * parent)
                 self.add_edge(child=child_ploid, parent=2 * parent + 1)
-                child_ploid += 1
+            else:
+                self.add_node(child_ploid)
+            child_ploid += 1
 
     def _write_levels_as_diploid(self, file, levels: [[int]]):
         """
@@ -99,33 +102,28 @@ class PloidPedigree(AbstractPedigree):
             file: The file to which the content should be written.
             levels: The levels that should be written to the file.
         """
-        # TODO: Refactor the code to avoid code duplication
         processed_ids = set()
         for level in levels:
             for vertex in level:
+                # Calculate the individual id
                 vertex_id = vertex // 2
                 if vertex_id in processed_ids:
                     continue
-                else:
-                    processed_ids.add(vertex_id)
+                processed_ids.add(vertex_id)
                 [first_parent_id, second_parent_id] = [-1, -1]
-                if self.has_parents(vertex):
-                    ploid_id = 2 * vertex_id
-                    if ploid_id in self:
-                        parents = self.get_parents(ploid_id)
-                        if len(parents) == 2:
-                            [first_parent, _] = parents
-                            first_parent_id = first_parent // 2
-                        else:
-                            print(f"{ploid_id} is in the graph, but has no parents\n")
-                    ploid_id += 1
-                    if ploid_id in self:
-                        parents = self.get_parents(ploid_id)
-                        if len(parents) == 2:
-                            [second_parent, _] = parents
-                            second_parent_id = second_parent // 2
-                        else:
-                            print(f"{ploid_id} is in the graph, but has no parents\n")
+                # Process the ploids of the individual
+                ploid_id = 2 * vertex_id
+                if ploid_id in self:
+                    parents = self.get_parents(ploid_id)
+                    if len(parents) == 2:
+                        [first_parent, _] = parents
+                        first_parent_id = first_parent // 2
+                ploid_id += 1
+                if ploid_id in self:
+                    parents = self.get_parents(ploid_id)
+                    if len(parents) == 2:
+                        [second_parent, _] = parents
+                        second_parent_id = second_parent // 2
                 file.write(f"{vertex_id} {first_parent_id} {second_parent_id}\n")
 
     def save_ascending_genealogy_as_diploid(self, filepath: str, vertices: Iterable[int]):
@@ -138,9 +136,8 @@ class PloidPedigree(AbstractPedigree):
             vertices: The vertices for which the ascending genealogy should be saved.
         """
         levels = self.get_ascending_graph_from_vertices_by_levels(vertices)
-        file = open(filepath, 'w')
-        self._write_levels_as_diploid(file, levels)
-        file.close()
+        with open(filepath, 'w') as file:
+            self._write_levels_as_diploid(file, levels)
 
     def save_as_diploid(self, filepath: str):
         """
@@ -149,9 +146,8 @@ class PloidPedigree(AbstractPedigree):
         Args:
             filepath: The path to the file to be written to.
         """
-        file = open(filepath, 'w')
-        self._write_levels_as_diploid(file, self.get_levels())
-        file.close()
+        with open(filepath, 'w') as file:
+            self._write_levels_as_diploid(file, self.get_levels())
 
     @staticmethod
     def get_individual_ids_from_ploids(ploid_ids: Iterable[int]):

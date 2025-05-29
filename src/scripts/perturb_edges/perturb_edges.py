@@ -1,5 +1,5 @@
-from basic.Pedigree import Pedigree
-from utility.utility import *
+from lineagekit.core.Pedigree import Pedigree
+from lineagekit.utility.utility import *
 
 filepath = get_file_path("Specify the path to the pedigree:")
 pedigree = Pedigree.get_pedigree_graph_from_file(filepath=filepath, separation_symbol=";",

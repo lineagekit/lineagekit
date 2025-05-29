@@ -1,10 +1,11 @@
+from collections import defaultdict
 from enum import Enum
 from typing import Iterable
 
-import kinship
+from lineagekit import kinship
 import numpy as np
 
-from basic.GenGraph import GenGraph
+from lineagekit.core.GenGraph import GenGraph
 
 from abc import ABC, abstractmethod
 import random
@@ -68,6 +69,53 @@ class AbstractPedigree(GenGraph, ABC):
         first_second_kinship = first_second_kinship_non_normalized / 2
         kinship_matrix[first_vertex_index, second_vertex_index] = first_second_kinship
         kinship_matrix[second_vertex_index, first_vertex_index] = first_second_kinship
+
+    def calculate_vertex_contribution_factor(self, vertex: int) -> float:
+        """
+        Contributes the contribution factor of a vertex by summing the contribution factors between its
+        proband descendants and the vertex itself.
+        Args:
+            vertex: The vertex id.
+
+        Returns:
+            The sum of the contribution factors.
+        """
+
+        def dfs(node, contribution):
+            node_children = self.get_children(node)
+            if len(node_children) == 0:  # Leaf node
+                leaf_contributions[node] += contribution
+                return
+            for child in node_children:
+                dfs(child, contribution / 2)
+
+        leaf_contributions = defaultdict(float)
+        dfs(vertex, 1.0)
+        return sum(leaf_contributions.values())
+
+    def calculate_contribution_factors(self, vertices: Iterable[int] = None):
+        def calculate_contribution_factor(node):
+            contribution_factor = contribution_factor_dict.get(node, None)
+            if contribution_factor:
+                return contribution_factor
+            children = self.get_children(node)
+            contribution_factor = 0
+            for child in children:
+                contribution_factor += calculate_contribution_factor(child)
+            contribution_factor /= 2
+            contribution_factor_dict[node] = contribution_factor
+            return contribution_factor
+
+        if vertices is None:
+            vertices = self.get_founders()
+        vertices = frozenset(vertices)
+        sink_vertices = self.get_sink_vertices()
+        contribution_factor_dict = defaultdict(float)
+        for sink_vertex in sink_vertices:
+            contribution_factor_dict[sink_vertex] = 1.0
+        for vertex in vertices:
+            calculate_contribution_factor(vertex)
+        return {x: y for x, y in contribution_factor_dict.items() if x in vertices}
 
     def calculate_kinship(self):
         """

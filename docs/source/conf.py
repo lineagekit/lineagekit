@@ -1,8 +1,7 @@
 import os
 import sys
 
-# TODO: Remove the manual path manipulation
-sys.path.insert(0, os.path.abspath('../../src/basic/'))
+sys.path.insert(0, os.path.abspath('../../src/core/'))
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -13,9 +12,8 @@ sys.path.insert(0, os.path.abspath('../../src/basic/'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'lineagekit'
-copyright = '2024, Andrii Serdiuk'
+copyright = '2025, Andrii Serdiuk'
 author = 'Andrii Serdiuk'
-release = '1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
