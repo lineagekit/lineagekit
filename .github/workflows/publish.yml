@@ -31,8 +31,14 @@ jobs:
       - name: Install build tool
         run: pip install build
 
-      - name: Build package
-        run: python -m build
+      - name: Build wheels
+        run: |
+          cibuildwheel --output-dir dist
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
