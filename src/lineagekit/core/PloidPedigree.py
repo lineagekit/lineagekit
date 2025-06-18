@@ -93,6 +93,19 @@ class PloidPedigree(AbstractPedigree):
                 self.add_node(child_ploid)
             child_ploid += 1
 
+    @staticmethod
+    def get_other_ploid(ploid_id: int):
+        """
+        Returns the other ploid of the individual with the given ploid_id.
+
+        Args:
+            ploid_id: The ploid id.
+        """
+        other_ploid = (ploid_id // 2) * 2
+        if other_ploid == ploid_id:
+            other_ploid += 1
+        return other_ploid
+
     def _write_levels_as_diploid(self, file, levels: [[int]]):
         """
         Writes the given levels of the graph to a file. Assumes that the graph vertices represent ploids, and

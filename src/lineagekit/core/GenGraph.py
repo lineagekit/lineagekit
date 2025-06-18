@@ -395,16 +395,20 @@ class GenGraph(nx.DiGraph):
         ascending_graph = self.get_ascending_vertices_from_probands(probands)
         self.remove_nodes_from(set(self.nodes()).difference(ascending_graph))
 
-    def get_descendants_for_vertex(self, vertex_id: int):
+    def get_descendants_for_vertex(self, vertex_id: int, include_self: bool = False):
         """
         The method returns all the descendants of the given vertex.
         Args:
             vertex_id: The ID of the vertex.
-
+            include_self: Specifies whether the vertex itself should be added to the list.
         Returns:
             Set containing the descendants of the given vertex.
         """
-        return nx.descendants(self, vertex_id)
+        descendants = nx.descendants(self, vertex_id)
+        if not include_self:
+            return descendants
+        descendants.add(vertex_id)
+        return descendants
 
     def reduce_to_subgraph(self, subgraph_vertices):
         """
