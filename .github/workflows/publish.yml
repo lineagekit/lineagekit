@@ -29,7 +29,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install build tool
-        run: pip install cibuildwheel
+        run: pip install build cibuildwheel
+
+      - name: Build sdist
+        run: python -m build --sdist --outdir dist
 
       - name: Build wheels
         run: |

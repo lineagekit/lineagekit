@@ -1,9 +1,6 @@
 # lineagekit
 A python library with genealogy methods. We will seek to integrate code or functionality or both from:
 
-# [Documentation](#documentaion)
-You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/)
-
 ## ISGEN (Dominic's code on importance sampling)
 https://github.com/DomNelson/ISGen
 
@@ -27,6 +24,9 @@ https://github.com/ivan-krukov/aligning-genealogies/tree/master/genealogy_aligne
 ## Luke pedigree simulations
 
 ## sgkit
+
+# [Documentation](#documentaion)
+You can find the documentation for this project [here](https://lineagekit.github.io/lineagekit/).
 
 # Installation
 
