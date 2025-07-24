@@ -122,12 +122,10 @@ class AbstractPedigree(GenGraph, ABC):
         Calculates all-pairwise kinship coefficients.
 
         Returns:
-            tuple:
-                A tuple containing:
-                    1. A dictionary mapping vertex IDs to their corresponding kinship matrix indices.
-                    2. A numpy.ndarray representing the kinship matrix where each element (i, j) is the
-                      kinship coefficient between vertex i and vertex j.
-
+            Tuple[Dict[int, int], np.ndarray]: A tuple containing:
+                1. A dictionary mapping vertex IDs to their corresponding kinship matrix indices.
+                2. A numpy.ndarray representing the kinship matrix where each element (i, j) is the
+                   kinship coefficient between vertex i and vertex j.
         Example:
             >>> # Example usage of the function:
             >>> vertex_to_index, direct_kinship_matrix = pedigree.calculate_kinship()

@@ -8,7 +8,7 @@ Pedigree
 API
 -------------------------------------
 
-.. automodule:: Pedigree
+.. automodule:: lineagekit.core.Pedigree
     :members:
     :show-inheritance:
     :exclude-members: KinshipMode

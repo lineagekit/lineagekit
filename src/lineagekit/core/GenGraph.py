@@ -424,26 +424,27 @@ class GenGraph(nx.DiGraph):
                             missing_parent_notation=None, separation_symbol=' ', skip_first_line: bool = False) \
             -> GenGraph:
         """
-        Parses the genealogical graph from the file specified by the path.
-        Notice that the every line of the file must contain at most max_parent_number + 1 ids, but it can
-        optionally have some metadata which is ignored by this class.
+        Parses the genealogical graph from the specified file path.
+
+        Each line of the file must contain at most `max_parent_number + 1` IDs. Optional metadata may
+        follow, but it is ignored by this class.
 
         Args:
-            filepath (str): The path to the file to be used. The file can optionally start with 1 comment line starting
-                            with the '#' symbol.
-            parent_number (int): The maximum number of parents an individual can posses. The default is 2.
-            probands (Iterable[int]): Optional parameter. The probands for which the ascending graph should be
-                                      calculated. By default, all the vertices from the input file are stored.
-            missing_parent_notation: The list of text sequences representing that the given individual has no parents.
-                                     If not specified, the default values "-1" and "." are used (meaning that both are
-                                    accepted at the same time).
-            separation_symbol (str): The symbol used to separate the values in a line. By default, a space is used.
-            skip_first_line (bool): Specifies whether the first line in the file should be skipped. Can be useful if the
-                                    header does not start with a '#' symbol.
+            filepath (str): Path to the input file. The file can optionally start with one comment
+                line beginning with the `#` symbol.
+            parent_number (int): Maximum number of parents an individual can have. Default is 2.
+            probands (Iterable[int], optional): A list of proband vertex IDs. If not provided, all
+                vertices from the file are stored.
+            missing_parent_notation (List[str], optional): List of string values that indicate a missing
+                parent. Defaults to `["-1", "."]`.
+            separation_symbol (str, optional): Symbol used to separate values in a line. Defaults to a space.
+            skip_first_line (bool, optional): Whether to skip the first line of the file (useful if the
+                header doesn't start with a `#`). Defaults to False.
 
         Returns:
-            The processed pedigree.
+            GenGraph: The processed pedigree object.
         """
+
         pedigree: GenGraph = GenGraph(parent_number=parent_number)
 
         def process_line(file_line: str):

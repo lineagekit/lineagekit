@@ -31,6 +31,9 @@ autodoc_default_options = {
     'special-members': '__init__',
 }
 
+autodoc_typehints = "description"  # Show types in description instead of signature
+typehints_defaults = "braces"      # Show default values nicely
+
 napoleon_google_docstring = True
 napoleon_numpy_docstring = False
 

@@ -31,6 +31,25 @@ refer to our
 `development policy <https://github.com/lineagekit/lineagekit/tree/dev?tab=readme-ov-file#development-policy>`_
 for more information.
 
+##################
+Publishing
+##################
+
+If you want to publish a new version of `lineagekit` to PyPI (so that it can be installed with `pip`), follow these steps:
+
+1. Update the version number in ``setup.cfg`` located in the root directory of the project. For example, let's say that the new version of the library is 1.1.0.
+
+2. Create a Git tag for the version you specified by running::
+
+     git tag v1.1.0
+
+3. Push the tag to the remote repository with::
+
+     git push origin v1.1.0
+
+
+Now, you should be able to install the package with pip.
+
 ####################
 Contents
 ####################

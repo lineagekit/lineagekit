@@ -8,6 +8,6 @@ Ploid Pedigree
 API
 -------------------------------------
 
-.. automodule:: PloidPedigree
+.. automodule:: lineagekit.core.PloidPedigree
     :members:
     :show-inheritance:

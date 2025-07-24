@@ -8,6 +8,6 @@ GenGraph
 API
 -------------------------------------
 
-.. automodule:: GenGraph
+.. automodule:: lineagekit.core.GenGraph
     :members:
     :show-inheritance:

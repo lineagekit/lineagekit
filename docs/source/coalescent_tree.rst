@@ -8,6 +8,6 @@ Coalescent Tree
 API
 -------------------------------------
 
-.. automodule:: CoalescentTree
+.. automodule:: lineagekit.core.CoalescentTree
     :members:
     :show-inheritance:

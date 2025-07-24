@@ -8,6 +8,6 @@ Abstract Pedigree
 API
 -------------------------------------
 
-.. automodule:: AbstractPedigree
+.. automodule:: lineagekit.core.AbstractPedigree
     :members:
     :show-inheritance:
