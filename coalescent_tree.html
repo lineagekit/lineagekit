@@ -1,0 +1,808 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Coalescent Tree &#8212; lineagekit  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'coalescent_tree';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Use-cases" href="use_cases/index.html" />
+    <link rel="prev" title="Ploid Pedigree" href="ploid_pedigree.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lineagekit  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gen_graph.html">GenGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="abstract_pedigree.html">Abstract Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pedigree.html">Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ploid_pedigree.html">Ploid Pedigree</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Coalescent Tree</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="use_cases/index.html">Use-cases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/ascending_genealogy.html">Calculating ascending genealogy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/kinship.html">Calculating kinships</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/coalescent_tree.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Coalescent Tree</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.CoalescentTree">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.__init__"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.copy"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_arg"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_arg()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_coalescent_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree_from_file"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_coalescent_tree_from_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_probands"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_largest_clade_by_probands()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_size"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_largest_clade_by_size()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_path_between_vertices"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_path_between_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_for_clade"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_root_for_clade()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_vertex"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_root_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_vertex_parent"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_vertex_parent()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.merge_edge"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.merge_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.remove_unary_nodes"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.remove_unary_nodes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.subdivide_tree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.subdivide_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.unmerge_edge"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.unmerge_edge()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="coalescent-tree">
+<span id="id1"></span><h1>Coalescent Tree<a class="headerlink" href="#coalescent-tree" title="Link to this heading">#</a></h1>
+<section id="module-lineagekit.core.CoalescentTree">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-lineagekit.core.CoalescentTree" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lineagekit.core.CoalescentTree.</span></span><span class="sig-name descname"><span class="pre">CoalescentTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="gen_graph.html#lineagekit.core.GenGraph.GenGraph" title="lineagekit.core.GenGraph.GenGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenGraph</span></code></a></p>
+<p>Special class designed for working with coalescent trees.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize a graph with edges, name, or graph attributes.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>incoming_graph_data<span class="classifier">input graph (optional, default: None)</span></dt><dd><p>Data to initialize graph.  If None (default) an empty
+graph is created.  The data can be an edge list, or any
+NetworkX graph object.  If the corresponding optional Python
+packages are installed the data can also be a 2D NumPy array, a
+SciPy sparse array, or a PyGraphviz graph.</p>
+</dd>
+<dt>attr<span class="classifier">keyword arguments, optional (default= no attributes)</span></dt><dd><p>Attributes to add to graph as key=value pairs.</p>
+</dd>
+</dl>
+</section>
+<section id="see-also">
+<h3>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h3>
+<p>convert</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my graph&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  <span class="c1"># list of edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Arbitrary graph attribute pairs (key=value) may be assigned</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="s2">&quot;Friday&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">graph</span>
+<span class="go">{&#39;day&#39;: &#39;Friday&#39;}</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.copy" title="Link to this definition">#</a></dt>
+<dd><p>Returns a copy of the graph.</p>
+<p>The copy method by default returns an independent shallow copy
+of the graph and attributes. That is, if an attribute is a
+container, that container is shared by the original an the copy.
+Use Python’s <cite>copy.deepcopy</cite> for new containers.</p>
+<p>If <cite>as_view</cite> is True then a view is returned instead of a copy.</p>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h3>
+<p>All copies reproduce the graph structure, but data attributes
+may be handled in different ways. There are four types of copies
+of a graph that people might want.</p>
+<p>Deepcopy – A “deepcopy” copies the graph structure as well as
+all data attributes and any objects they might contain.
+The entire graph object is new so that changes in the copy
+do not affect the original object. (see Python’s copy.deepcopy)</p>
+<p>Data Reference (Shallow) – For a shallow copy the graph structure
+is copied but the edge, node and graph attribute dicts are
+references to those in the original graph. This saves
+time and memory but could cause confusion if you change an attribute
+in one graph and it changes the attribute in the other.
+NetworkX does not provide this level of shallow copy.</p>
+<p>Independent Shallow – This copy creates new independent attribute
+dicts and then does a shallow copy of the attributes. That is, any
+attributes that are containers are shared between the new graph
+and the original. This is exactly what <cite>dict.copy()</cite> provides.
+You can obtain this style copy using:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">path_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">as_view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Fresh Data – For fresh data, the graph structure is copied while
+new empty data attribute dicts are created. The resulting graph
+is independent of the original and it has no edge, node or graph
+attributes. Fresh copies are not enabled. Instead use:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>View – Inspired by dict-views, graph-views act like read-only
+versions of the original graph, providing a copy of the original
+structure without requiring any memory for copying the information.</p>
+<p>See the Python copy module for more information on shallow
+and deep copies, <a class="reference external" href="https://docs.python.org/3/library/copy.html">https://docs.python.org/3/library/copy.html</a>.</p>
+</section>
+<section id="id2">
+<h3>Parameters<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>as_view<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, the returned graph-view provides a read-only view
+of the original graph without actually copying any data.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>G<span class="classifier">Graph</span></dt><dd><p>A copy of the graph.</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h3>See Also<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<p>to_directed: return a directed copy of the graph.</p>
+</section>
+<section id="id4">
+<h3>Examples<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">path_graph</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_arg">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree_sequence</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_arg" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tree_sequence</strong> (<em>TreeSequence</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coalescent_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree" title="Link to this definition">#</a></dt>
+<dd><p>Utility function to get a coalescent tree from a tskit tree.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tree</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Tree</span></code></span>) – The tskit tree.</p></li>
+<li><p><strong>probands</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span> (default: <code class="docutils literal notranslate"><span class="pre">None</span></code>)) – The probands for which the ascending genealogy should be calculated. Do not specify the value
+if all the vertices without children should be considered probands.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#lineagekit.core.CoalescentTree.CoalescentTree" title="lineagekit.core.CoalescentTree.CoalescentTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoalescentTree</span></code></a></span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The resulting tree.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree_from_file">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_coalescent_tree_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separation_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_first_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree_from_file" title="Link to this definition">#</a></dt>
+<dd><p>Utility function to get a coalescent tree from a file.</p>
+<p>The format of the file is as follows:
+child parent</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#lineagekit.core.CoalescentTree.CoalescentTree" title="lineagekit.core.CoalescentTree.CoalescentTree"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoalescentTree</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>probands</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>)</p></li>
+<li><p><strong>skip_first_line</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_probands">
+<span class="sig-name descname"><span class="pre">get_largest_clade_by_probands</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_probands" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">[&lt;class ‘int’&gt;]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The largest clade in the tree by the number of probands.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_size">
+<span class="sig-name descname"><span class="pre">get_largest_clade_by_size</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_size" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">[&lt;class ‘int’&gt;]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The largest clade in the tree by its total size.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_path_between_vertices">
+<span class="sig-name descname"><span class="pre">get_path_between_vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_path_between_vertices" title="Link to this definition">#</a></dt>
+<dd><p>This function finds the path between the given two vertices. If there is no path between the given
+two vertices, None is returned.
+Important! For performance purposes, this function does not verify that there is no more than one path between
+the vertices (which must be true for a tree). Instead, a random path is returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>int</em>) – The source vertex.</p></li>
+<li><p><strong>target</strong> (<em>int</em>) – The target vertex.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The path between the given vertices.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NodeNotFound if either the source</strong><strong> or </strong><strong>target vertex does not exist</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_root_for_clade">
+<span class="sig-name descname"><span class="pre">get_root_for_clade</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clade</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_for_clade" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The root of the given clade.</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clade</strong> (<em>[</em><em>&lt;class 'int'&gt;</em><em>]</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_root_vertex">
+<span class="sig-name descname"><span class="pre">get_root_vertex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_vertex" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The root vertex of the tree consisting of a single clade. If the root cannot be determined, the
+method throws an exception.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the tree has multiple source vertices or the tree is empty.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.get_vertex_parent">
+<span class="sig-name descname"><span class="pre">get_vertex_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_vertex_parent" title="Link to this definition">#</a></dt>
+<dd><p>This function returns the unique parent vertex of the given vertex.
+:type vertex_id: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param vertex_id: The child vertex id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parent vertex id.</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertex_id</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.merge_edge">
+<span class="sig-name descname"><span class="pre">merge_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.merge_edge" title="Link to this definition">#</a></dt>
+<dd><p>This method merges the specified edge in the tree. The purpose of this function is to model a
+common error in an ARG, where what was intended to be an edge is, in reality, just a vertex.
+:type parent: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param parent: The parent vertex of the edge.
+:type child: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param child: The child vertex of the edge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>int</em>)</p></li>
+<li><p><strong>child</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.remove_unary_nodes">
+<span class="sig-name descname"><span class="pre">remove_unary_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.remove_unary_nodes" title="Link to this definition">#</a></dt>
+<dd><p>Removes all the unary nodes in the coalescent tree and recalculates the levels of the coalescent tree.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.subdivide_tree">
+<span class="sig-name descname"><span class="pre">subdivide_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edge_child_vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.subdivide_tree" title="Link to this definition">#</a></dt>
+<dd><p>This method creates the two trees by removing the specified edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edge_child_vertex</strong> – The child vertex of the edge. Notice that in a coalescent tree, the edge</p></li>
+<li><p><strong>vertex.</strong> (<em>can be identified by the id</em><em> of </em><em>its child</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The two trees that are obtained by removing the edge. The first tree corresponds to the
+upper subtree, the second tree corresponds to the lower subtree.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#lineagekit.core.CoalescentTree.CoalescentTree" title="lineagekit.core.CoalescentTree.CoalescentTree">CoalescentTree</a>, <a class="reference internal" href="#lineagekit.core.CoalescentTree.CoalescentTree" title="lineagekit.core.CoalescentTree.CoalescentTree">CoalescentTree</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.CoalescentTree.CoalescentTree.unmerge_edge">
+<span class="sig-name descname"><span class="pre">unmerge_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.CoalescentTree.CoalescentTree.unmerge_edge" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>child</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="ploid_pedigree.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Ploid Pedigree</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="use_cases/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Use-cases</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.CoalescentTree">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.__init__"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.copy"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_arg"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_arg()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_coalescent_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_coalescent_tree_from_file"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_coalescent_tree_from_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_probands"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_largest_clade_by_probands()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_largest_clade_by_size"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_largest_clade_by_size()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_path_between_vertices"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_path_between_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_for_clade"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_root_for_clade()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_root_vertex"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_root_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.get_vertex_parent"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.get_vertex_parent()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.merge_edge"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.merge_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.remove_unary_nodes"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.remove_unary_nodes()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.subdivide_tree"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.subdivide_tree()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.CoalescentTree.CoalescentTree.unmerge_edge"><code class="docutils literal notranslate"><span class="pre">CoalescentTree.unmerge_edge()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Andrii Serdiuk
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Andrii Serdiuk.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

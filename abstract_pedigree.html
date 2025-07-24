@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Abstract Pedigree &#8212; lineagekit  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'abstract_pedigree';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Pedigree" href="pedigree.html" />
+    <link rel="prev" title="GenGraph" href="gen_graph.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lineagekit  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gen_graph.html">GenGraph</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Abstract Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pedigree.html">Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ploid_pedigree.html">Ploid Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coalescent_tree.html">Coalescent Tree</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="use_cases/index.html">Use-cases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/ascending_genealogy.html">Calculating ascending genealogy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/kinship.html">Calculating kinships</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/abstract_pedigree.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Abstract Pedigree</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.AbstractPedigree">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.__init__"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.apply_errors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_contribution_factors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_contribution_factors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_kinship"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_kinship()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_probands_kinship"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_probands_kinship()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_vertex_contribution_factor"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_vertex_contribution_factor()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.introduce_and_record_errors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.reverse_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.reverse_errors()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode"><code class="docutils literal notranslate"><span class="pre">KinshipMode</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode.MEMORY"><code class="docutils literal notranslate"><span class="pre">KinshipMode.MEMORY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode.SPEED"><code class="docutils literal notranslate"><span class="pre">KinshipMode.SPEED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="abstract-pedigree">
+<span id="id1"></span><h1>Abstract Pedigree<a class="headerlink" href="#abstract-pedigree" title="Link to this heading">#</a></h1>
+<section id="module-lineagekit.core.AbstractPedigree">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-lineagekit.core.AbstractPedigree" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lineagekit.core.AbstractPedigree.</span></span><span class="sig-name descname"><span class="pre">AbstractPedigree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="gen_graph.html#lineagekit.core.GenGraph.GenGraph" title="lineagekit.core.GenGraph.GenGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenGraph</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>The abstract base class for all Pedigree abstract classes containing all the common functionality.
+This class is for internal use only.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize a graph with edges, name, or graph attributes.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>incoming_graph_data<span class="classifier">input graph (optional, default: None)</span></dt><dd><p>Data to initialize graph.  If None (default) an empty
+graph is created.  The data can be an edge list, or any
+NetworkX graph object.  If the corresponding optional Python
+packages are installed the data can also be a 2D NumPy array, a
+SciPy sparse array, or a PyGraphviz graph.</p>
+</dd>
+<dt>attr<span class="classifier">keyword arguments, optional (default= no attributes)</span></dt><dd><p>Attributes to add to graph as key=value pairs.</p>
+</dd>
+</dl>
+</section>
+<section id="see-also">
+<h3>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h3>
+<p>convert</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my graph&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  <span class="c1"># list of edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Arbitrary graph attribute pairs (key=value) may be assigned</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="s2">&quot;Friday&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">graph</span>
+<span class="go">{&#39;day&#39;: &#39;Friday&#39;}</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors">
+<span class="sig-name descname"><span class="pre">apply_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">errors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors" title="Link to this definition">#</a></dt>
+<dd><p>Applies the errors simulated by the <a class="reference internal" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors" title="lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">introduce_and_record_errors()</span></code></a> function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_contribution_factors">
+<span class="sig-name descname"><span class="pre">calculate_contribution_factors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_contribution_factors" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertices</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_kinship">
+<span class="sig-name descname"><span class="pre">calculate_kinship</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_kinship" title="Link to this definition">#</a></dt>
+<dd><p>Calculates all-pairwise kinship coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>A tuple containing:</dt><dd><ol class="arabic simple">
+<li><p>A dictionary mapping vertex IDs to their corresponding kinship matrix indices.</p></li>
+<li><p>A numpy.ndarray representing the kinship matrix where each element (i, j) is the
+kinship coefficient between vertex i and vertex j.</p></li>
+</ol>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[Dict[int, int], np.ndarray]</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example usage of the function:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vertex_to_index</span><span class="p">,</span> <span class="n">direct_kinship_matrix</span> <span class="o">=</span> <span class="n">pedigree</span><span class="o">.</span><span class="n">calculate_kinship</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vertices_kinship</span> <span class="o">=</span> <span class="n">direct_kinship_matrix</span><span class="p">[</span><span class="n">vertex_to_index</span><span class="p">[</span><span class="n">vertex_1</span><span class="p">],</span> <span class="n">vertex_to_index</span><span class="p">[</span><span class="n">vertex_2</span><span class="p">]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_probands_kinship">
+<span class="sig-name descname"><span class="pre">calculate_probands_kinship</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">KinshipMode.SPEED</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_probands_kinship" title="Link to this definition">#</a></dt>
+<dd><p>Calculates the all-pairwise kinship coefficients for the given list of vertices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>probands</strong> (<em>set</em><em>[</em><em>int</em><em>]</em>) – The list of vertices for which the kinship coefficients should be calculated.
+If not specified, the sink vertices are used.</p></li>
+<li><p><strong>mode</strong> (<a class="reference internal" href="#lineagekit.core.AbstractPedigree.KinshipMode" title="lineagekit.core.AbstractPedigree.KinshipMode"><em>KinshipMode</em></a>) – The running mode of the kinship calculation. By default, the SPEED option is used,
+which offers the best performance in terms of running time and is suitable when memory
+is not a concern.
+Alternatively, the MEMORY option is available for cases where memory usage is a concern.
+On average, the MEMORY option reduces memory usage by approximately 25% but results in
+about 40% additional running time.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The kinship matrix for the probands.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">kinship_matrix</span> <span class="o">=</span> <span class="n">pedigree</span><span class="o">.</span><span class="n">calculate_probands_kinship</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">probands_kinship</span> <span class="o">=</span> <span class="n">kinship_matrix</span><span class="o">.</span><span class="n">get_kinship</span><span class="p">(</span><span class="n">proband</span><span class="p">,</span> <span class="n">other_proband</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_vertex_contribution_factor">
+<span class="sig-name descname"><span class="pre">calculate_vertex_contribution_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_vertex_contribution_factor" title="Link to this definition">#</a></dt>
+<dd><p>Contributes the contribution factor of a vertex by summing the contribution factors between its
+proband descendants and the vertex itself.
+:type vertex: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param vertex: The vertex id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sum of the contribution factors.</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertex</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors">
+<span class="sig-name descname"><span class="pre">introduce_and_record_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error_rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_errors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors" title="Link to this definition">#</a></dt>
+<dd><p>Simulates the errors within the pedigree and returns them. Additionally, the errors can be automatically
+applied if <code class="docutils literal notranslate"><span class="pre">apply_errors</span></code> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>. The errors can be also applied manually by calling the
+<a class="reference internal" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors" title="lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apply_errors()</span></code></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>error_rate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – The probability of an individual being connected to a different parent</p></li>
+<li><p><strong>apply_errors</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">True</span></code>)) – If set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the errors will be applied automatically. Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The function returns a list of tuples where every tuple represents an error.
+The tuple structure is as follows:
+1) The first value - the child id for which the parents have been changed.
+2) The second tuple contains the old parent ids. In other words, these are the edges that
+need to be removed
+3) The third tuple contains the new parent ids. In other words, these are the edges that
+need to be added</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.AbstractPedigree.reverse_errors">
+<span class="sig-name descname"><span class="pre">reverse_errors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">errors</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.reverse_errors" title="Link to this definition">#</a></dt>
+<dd><p>Reverses the errors that have been applied by the <a class="reference internal" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors" title="lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors"><code class="xref py py-meth docutils literal notranslate"><span class="pre">apply_errors()</span></code></a> function.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.KinshipMode">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lineagekit.core.AbstractPedigree.</span></span><span class="sig-name descname"><span class="pre">KinshipMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.AbstractPedigree.KinshipMode" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.KinshipMode.MEMORY">
+<span class="sig-name descname"><span class="pre">MEMORY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#lineagekit.core.AbstractPedigree.KinshipMode.MEMORY" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="lineagekit.core.AbstractPedigree.KinshipMode.SPEED">
+<span class="sig-name descname"><span class="pre">SPEED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#lineagekit.core.AbstractPedigree.KinshipMode.SPEED" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gen_graph.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">GenGraph</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="pedigree.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Pedigree</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.AbstractPedigree">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.__init__"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.apply_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.apply_errors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_contribution_factors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_contribution_factors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_kinship"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_kinship()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_probands_kinship"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_probands_kinship()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.calculate_vertex_contribution_factor"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.calculate_vertex_contribution_factor()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.introduce_and_record_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.introduce_and_record_errors()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.AbstractPedigree.reverse_errors"><code class="docutils literal notranslate"><span class="pre">AbstractPedigree.reverse_errors()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode"><code class="docutils literal notranslate"><span class="pre">KinshipMode</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode.MEMORY"><code class="docutils literal notranslate"><span class="pre">KinshipMode.MEMORY</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.AbstractPedigree.KinshipMode.SPEED"><code class="docutils literal notranslate"><span class="pre">KinshipMode.SPEED</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Andrii Serdiuk
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Andrii Serdiuk.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

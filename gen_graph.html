@@ -1,0 +1,1324 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>GenGraph &#8212; lineagekit  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'gen_graph';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Abstract Pedigree" href="abstract_pedigree.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">lineagekit  documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">GenGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="abstract_pedigree.html">Abstract Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pedigree.html">Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ploid_pedigree.html">Ploid Pedigree</a></li>
+<li class="toctree-l1"><a class="reference internal" href="coalescent_tree.html">Coalescent Tree</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="use_cases/index.html">Use-cases</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/ascending_genealogy.html">Calculating ascending genealogy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="use_cases/kinship.html">Calculating kinships</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/gen_graph.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>GenGraph</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.GenGraph">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph"><code class="docutils literal notranslate"><span class="pre">GenGraph</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.__init__"><code class="docutils literal notranslate"><span class="pre">GenGraph.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_edges_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_edges_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_node"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_nodes_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_nodes_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.copy"><code class="docutils literal notranslate"><span class="pre">GenGraph.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_graph_from_vertices_by_levels"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_ascending_graph_from_vertices_by_levels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_vertices_from_probands"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_ascending_vertices_from_probands()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_children_for_list"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_children_for_list()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_connected_component_for_vertex"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_connected_component_for_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_connected_components"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_connected_components()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_descendants_for_vertex"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_descendants_for_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_founders"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_founders()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_graph_from_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_graph_from_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_levels"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_levels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_parents_for_list"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_parents_for_list()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_sink_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_sink_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_top_level_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_top_level_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertex_level"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertex_level()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_for_given_level"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertices_for_given_level()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_number"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertices_number()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.is_founder"><code class="docutils literal notranslate"><span class="pre">GenGraph.is_founder()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.is_parent"><code class="docutils literal notranslate"><span class="pre">GenGraph.is_parent()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.parse_line"><code class="docutils literal notranslate"><span class="pre">GenGraph.parse_line()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_ascending_graph"><code class="docutils literal notranslate"><span class="pre">GenGraph.reduce_to_ascending_graph()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_subgraph"><code class="docutils literal notranslate"><span class="pre">GenGraph.reduce_to_subgraph()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_to_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_to_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_isolated_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_isolated_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_node"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_nodes_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_nodes_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_ascending_graph_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_ascending_graph_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_vertices_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_vertices_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.to_data_frame"><code class="docutils literal notranslate"><span class="pre">GenGraph.to_data_frame()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.verify_max_parents_number"><code class="docutils literal notranslate"><span class="pre">GenGraph.verify_max_parents_number()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="gengraph">
+<span id="gen-graph"></span><h1>GenGraph<a class="headerlink" href="#gengraph" title="Link to this heading">#</a></h1>
+<section id="module-lineagekit.core.GenGraph">
+<span id="api"></span><h2>API<a class="headerlink" href="#module-lineagekit.core.GenGraph" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">lineagekit.core.GenGraph.</span></span><span class="sig-name descname"><span class="pre">GenGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DiGraph</span></code></p>
+<p>The general class for a genealogical directed graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent_number</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initialize a graph with edges, name, or graph attributes.</p>
+<section id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>incoming_graph_data<span class="classifier">input graph (optional, default: None)</span></dt><dd><p>Data to initialize graph.  If None (default) an empty
+graph is created.  The data can be an edge list, or any
+NetworkX graph object.  If the corresponding optional Python
+packages are installed the data can also be a 2D NumPy array, a
+SciPy sparse array, or a PyGraphviz graph.</p>
+</dd>
+<dt>attr<span class="classifier">keyword arguments, optional (default= no attributes)</span></dt><dd><p>Attributes to add to graph as key=value pairs.</p>
+</dd>
+</dl>
+</section>
+<section id="see-also">
+<h3>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h3>
+<p>convert</p>
+</section>
+<section id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;my graph&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">e</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>  <span class="c1"># list of edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Arbitrary graph attribute pairs (key=value) may be assigned</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="s2">&quot;Friday&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">graph</span>
+<span class="go">{&#39;day&#39;: &#39;Friday&#39;}</span>
+</pre></div>
+</div>
+</section>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent_number</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_children">
+<span class="sig-name descname"><span class="pre">add_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_children" title="Link to this definition">#</a></dt>
+<dd><p>Adds the children for the specified vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>int</em>) – The parent id.</p></li>
+<li><p><strong>children</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The children to be added.</p></li>
+<li><p><strong>attr</strong> (<em>dict</em>) – The attributes of the edges.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_edge">
+<span class="sig-name descname"><span class="pre">add_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_edge" title="Link to this definition">#</a></dt>
+<dd><p>Adds an edge to the graph. If either child or parent vertex is not present in the graph, adds the vertex to
+the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> (<em>int</em>) – The child id.</p></li>
+<li><p><strong>parent</strong> (<em>int</em>) – The parent id.</p></li>
+<li><p><strong>attr</strong> (<em>dict</em>) – The attributes of the edge.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_edges_from">
+<span class="sig-name descname"><span class="pre">add_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ebunch_to_add</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_edges_from" title="Link to this definition">#</a></dt>
+<dd><p>Removes the edges and invalidates the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ebunch_to_add</strong> – The edges to be removed.</p></li>
+<li><p><strong>attr</strong> – keyword arguments, optional
+Edge data (or labels or objects) can be assigned using keyword arguments.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_node">
+<span class="sig-name descname"><span class="pre">add_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_node" title="Link to this definition">#</a></dt>
+<dd><p>Add a single node <cite>node_for_adding</cite> and update node attributes.</p>
+<section id="id1">
+<h3>Parameters<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>node_for_adding<span class="classifier">node</span></dt><dd><p>A node can be any hashable Python object except None.</p>
+</dd>
+<dt>attr<span class="classifier">keyword arguments, optional</span></dt><dd><p>Set or change node attributes using key=value.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h3>See Also<a class="headerlink" href="#id2" title="Link to this heading">#</a></h3>
+<p>add_nodes_from</p>
+</section>
+<section id="id3">
+<h3>Examples<a class="headerlink" href="#id3" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K3</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">K3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">number_of_nodes</span><span class="p">()</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+<p>Use keywords set/change node attributes:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">UTM</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;13S&quot;</span><span class="p">,</span> <span class="mi">382871</span><span class="p">,</span> <span class="mi">3972649</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="notes">
+<h3>Notes<a class="headerlink" href="#notes" title="Link to this heading">#</a></h3>
+<p>A hashable object is one that can be used as a key in a Python
+dictionary. This includes strings, numbers, tuples of strings
+and numbers, etc.</p>
+<p>On many platforms hashable items also include mutables such as
+NetworkX Graphs, though one should be careful that the hash
+doesn’t change on mutables.</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_nodes_from">
+<span class="sig-name descname"><span class="pre">add_nodes_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes_for_adding</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_nodes_from" title="Link to this definition">#</a></dt>
+<dd><p>Add multiple nodes.</p>
+<section id="id4">
+<h3>Parameters<a class="headerlink" href="#id4" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>nodes_for_adding<span class="classifier">iterable container</span></dt><dd><p>A container of nodes (list, dict, set, etc.).
+OR
+A container of (node, attribute dict) tuples.
+Node attributes are updated using the attribute dict.</p>
+</dd>
+<dt>attr<span class="classifier">keyword arguments, optional (default= no attributes)</span></dt><dd><p>Update attributes for all nodes in nodes.
+Node attributes specified in nodes as a tuple take
+precedence over attributes specified via keyword arguments.</p>
+</dd>
+</dl>
+</section>
+<section id="id5">
+<h3>See Also<a class="headerlink" href="#id5" title="Link to this heading">#</a></h3>
+<p>add_node</p>
+</section>
+<section id="id6">
+<h3>Notes<a class="headerlink" href="#id6" title="Link to this heading">#</a></h3>
+<p>When adding nodes from an iterator over the graph you are changing,
+a <cite>RuntimeError</cite> can be raised with message:
+<cite>RuntimeError: dictionary changed size during iteration</cite>. This
+happens when the graph’s underlying dictionary is modified during
+iteration. To avoid this error, evaluate the iterator into a separate
+object, e.g. by using <cite>list(iterator_of_nodes)</cite>, and pass this
+object to <cite>G.add_nodes_from</cite>.</p>
+</section>
+<section id="id7">
+<h3>Examples<a class="headerlink" href="#id7" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">K3</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">K3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">sorted</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+<span class="go">[0, 1, 2, &#39;H&#39;, &#39;e&#39;, &#39;l&#39;, &#39;o&#39;]</span>
+</pre></div>
+</div>
+<p>Use keywords to update specific node attributes for every node.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use (node, attrdict) tuples to update attributes for specific nodes.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">})])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+<span class="go">11</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+<span class="go">11</span>
+</pre></div>
+</div>
+<p>Evaluate an iterator over a graph if using it to modify the same graph</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># wrong way - will raise RuntimeError</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># G.add_nodes_from(n + 1 for n in G.nodes)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># correct way</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.add_parents">
+<span class="sig-name descname"><span class="pre">add_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">child</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">attr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.add_parents" title="Link to this definition">#</a></dt>
+<dd><p>Adds the given parents for the specified vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> (<em>int</em>) – The parent id.</p></li>
+<li><p><strong>parents</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The parents to be added.</p></li>
+<li><p><strong>attr</strong> (<em>dict</em>) – The attributes of the edges.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">as_view</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.copy" title="Link to this definition">#</a></dt>
+<dd><p>Returns a copy of the graph.</p>
+<p>The copy method by default returns an independent shallow copy
+of the graph and attributes. That is, if an attribute is a
+container, that container is shared by the original an the copy.
+Use Python’s <cite>copy.deepcopy</cite> for new containers.</p>
+<p>If <cite>as_view</cite> is True then a view is returned instead of a copy.</p>
+<section id="id8">
+<h3>Notes<a class="headerlink" href="#id8" title="Link to this heading">#</a></h3>
+<p>All copies reproduce the graph structure, but data attributes
+may be handled in different ways. There are four types of copies
+of a graph that people might want.</p>
+<p>Deepcopy – A “deepcopy” copies the graph structure as well as
+all data attributes and any objects they might contain.
+The entire graph object is new so that changes in the copy
+do not affect the original object. (see Python’s copy.deepcopy)</p>
+<p>Data Reference (Shallow) – For a shallow copy the graph structure
+is copied but the edge, node and graph attribute dicts are
+references to those in the original graph. This saves
+time and memory but could cause confusion if you change an attribute
+in one graph and it changes the attribute in the other.
+NetworkX does not provide this level of shallow copy.</p>
+<p>Independent Shallow – This copy creates new independent attribute
+dicts and then does a shallow copy of the attributes. That is, any
+attributes that are containers are shared between the new graph
+and the original. This is exactly what <cite>dict.copy()</cite> provides.
+You can obtain this style copy using:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">path_graph</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">as_view</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Fresh Data – For fresh data, the graph structure is copied while
+new empty data attribute dicts are created. The resulting graph
+is independent of the original and it has no edge, node or graph
+attributes. Fresh copies are not enabled. Instead use:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="vm">__class__</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">add_nodes_from</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">G</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>View – Inspired by dict-views, graph-views act like read-only
+versions of the original graph, providing a copy of the original
+structure without requiring any memory for copying the information.</p>
+<p>See the Python copy module for more information on shallow
+and deep copies, <a class="reference external" href="https://docs.python.org/3/library/copy.html">https://docs.python.org/3/library/copy.html</a>.</p>
+</section>
+<section id="id9">
+<h3>Parameters<a class="headerlink" href="#id9" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>as_view<span class="classifier">bool, optional (default=False)</span></dt><dd><p>If True, the returned graph-view provides a read-only view
+of the original graph without actually copying any data.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Link to this heading">#</a></h3>
+<dl class="simple">
+<dt>G<span class="classifier">Graph</span></dt><dd><p>A copy of the graph.</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h3>See Also<a class="headerlink" href="#id10" title="Link to this heading">#</a></h3>
+<p>to_directed: return a directed copy of the graph.</p>
+</section>
+<section id="id11">
+<h3>Examples<a class="headerlink" href="#id11" title="Link to this heading">#</a></h3>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">path_graph</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>  <span class="c1"># or DiGraph, MultiGraph, MultiDiGraph, etc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">H</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_ascending_graph_from_vertices_by_levels">
+<span class="sig-name descname"><span class="pre">get_ascending_graph_from_vertices_by_levels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_graph_from_vertices_by_levels" title="Link to this definition">#</a></dt>
+<dd><p>Returns the ascending graph for the given list of vertices ordered by levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertices</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The vertices for which the ascending graph should be calculated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ascending graph for the given list of vertices ordered by levels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_ascending_vertices_from_probands">
+<span class="sig-name descname"><span class="pre">get_ascending_vertices_from_probands</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probands</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_vertices_from_probands" title="Link to this definition">#</a></dt>
+<dd><p>This method returns all the vertices in the ascending graph for the given list of vertices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>probands</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The vertices for which the ascending graph should be calculated.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type">{&lt;class ‘int’&gt;}</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The vertices in the ascending graph.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_children">
+<span class="sig-name descname"><span class="pre">get_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_children" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of the vertex’s children.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>vertex</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_children_for_list">
+<span class="sig-name descname"><span class="pre">get_children_for_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_children_for_list" title="Link to this definition">#</a></dt>
+<dd><p>Returns the list of all children for the given list of vertices.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_connected_component_for_vertex">
+<span class="sig-name descname"><span class="pre">get_connected_component_for_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_connected_component_for_vertex" title="Link to this definition">#</a></dt>
+<dd><p>The function finds all the vertices that are in the same connected component as the passed vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertex</strong> (<em>int</em>) – The vertex for which the connected component should be calculated.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type">[&lt;class ‘int’&gt;]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The set of vertices that are in the same connected component as the passed vertex.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_connected_components">
+<span class="sig-name descname"><span class="pre">get_connected_components</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_connected_components" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The connected components of the graph.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_descendants_for_vertex">
+<span class="sig-name descname"><span class="pre">get_descendants_for_vertex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_self</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_descendants_for_vertex" title="Link to this definition">#</a></dt>
+<dd><p>The method returns all the descendants of the given vertex.
+:type vertex_id: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param vertex_id: The ID of the vertex.
+:type include_self: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span> (default: <code class="docutils literal notranslate"><span class="pre">False</span></code>)
+:param include_self: Specifies whether the vertex itself should be added to the list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set containing the descendants of the given vertex.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>vertex_id</strong> (<em>int</em>)</p></li>
+<li><p><strong>include_self</strong> (<em>bool</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_founders">
+<span class="sig-name descname"><span class="pre">get_founders</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_founders" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The vertices that don’t have parents.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_graph_from_file">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_graph_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_number</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separation_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_first_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_graph_from_file" title="Link to this definition">#</a></dt>
+<dd><p>Parses the genealogical graph from the specified file path.</p>
+<p>Each line of the file must contain at most <cite>max_parent_number + 1</cite> IDs. Optional metadata may
+follow, but it is ignored by this class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – Path to the input file. The file can optionally start with one comment
+line beginning with the <cite>#</cite> symbol.</p></li>
+<li><p><strong>parent_number</strong> (<em>int</em>) – Maximum number of parents an individual can have. Default is 2.</p></li>
+<li><p><strong>probands</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A list of proband vertex IDs. If not provided, all
+vertices from the file are stored.</p></li>
+<li><p><strong>missing_parent_notation</strong> (<em>List</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of string values that indicate a missing
+parent. Defaults to <cite>[“-1”, “.”]</cite>.</p></li>
+<li><p><strong>separation_symbol</strong> (<em>str</em><em>, </em><em>optional</em>) – Symbol used to separate values in a line. Defaults to a space.</p></li>
+<li><p><strong>skip_first_line</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to skip the first line of the file (useful if the
+header doesn’t start with a <cite>#</cite>). Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The processed pedigree object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#lineagekit.core.GenGraph.GenGraph" title="lineagekit.core.GenGraph.GenGraph">GenGraph</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_levels">
+<span class="sig-name descname"><span class="pre">get_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_levels" title="Link to this definition">#</a></dt>
+<dd><p>Checks whether the levels data is outdated (which can be caused by removing vertices/edges without
+recalculating the levels). If so, recalculates the levels. Then, returns the levels of the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The graph’s levels.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_parents">
+<span class="sig-name descname"><span class="pre">get_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_parents" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of the vertex’s parents.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>vertex</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_parents_for_list">
+<span class="sig-name descname"><span class="pre">get_parents_for_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_parents_for_list" title="Link to this definition">#</a></dt>
+<dd><p>Returns the list of all parents for the given list of vertices.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_sink_vertices">
+<span class="sig-name descname"><span class="pre">get_sink_vertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_sink_vertices" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The sink vertices in the graph (that is, the individuals don’t have children).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_top_level_vertices">
+<span class="sig-name descname"><span class="pre">get_top_level_vertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_top_level_vertices" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">[&lt;class ‘int’&gt;]</span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The vertices at the top level of the graph.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_vertex_level">
+<span class="sig-name descname"><span class="pre">get_vertex_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_vertex_level" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertex</strong> (<em>int</em>) – The vertex for which the level should be calculated.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The level of the specified vertex.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_vertices_for_given_level">
+<span class="sig-name descname"><span class="pre">get_vertices_for_given_level</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_for_given_level" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>level</strong> (<em>int</em>) – The level to be used.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The vertices belonging to the specified level.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.get_vertices_number">
+<span class="sig-name descname"><span class="pre">get_vertices_number</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_number" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of vertices in the graph.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.has_children">
+<span class="sig-name descname"><span class="pre">has_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.has_children" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the given vertex has children, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.has_edge">
+<span class="sig-name descname"><span class="pre">has_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.has_edge" title="Link to this definition">#</a></dt>
+<dd><p>Returns: Whether the edge is present in the graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>int</em>)</p></li>
+<li><p><strong>child</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.has_parents">
+<span class="sig-name descname"><span class="pre">has_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.has_parents" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the given vertex has parents, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.is_founder">
+<span class="sig-name descname"><span class="pre">is_founder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.is_founder" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the specified vertex has no parents, False otherwise.</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>vertex</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.is_parent">
+<span class="sig-name descname"><span class="pre">is_parent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.is_parent" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the given relationship is present in the graph, False otherwise.</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>int</em>)</p></li>
+<li><p><strong>child</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.parse_line">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_parent_number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separation_symbol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.parse_line" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>line</strong> (<em>str</em>)</p></li>
+<li><p><strong>max_parent_number</strong> (<em>int</em>)</p></li>
+<li><p><strong>missing_parent_notation</strong> (<em>[</em><em>&lt;class 'str'&gt;</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.reduce_to_ascending_graph">
+<span class="sig-name descname"><span class="pre">reduce_to_ascending_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probands</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_ascending_graph" title="Link to this definition">#</a></dt>
+<dd><p>Reduces the given graph, so that only the information for the ascending graph for the given
+probands remains in the end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>probands</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The probands.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.reduce_to_subgraph">
+<span class="sig-name descname"><span class="pre">reduce_to_subgraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subgraph_vertices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_subgraph" title="Link to this definition">#</a></dt>
+<dd><p>Takes the induced subgraph using the passed vertices.
+:type subgraph_vertices: 
+:param subgraph_vertices: The vertices in the subgraph</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_edge">
+<span class="sig-name descname"><span class="pre">remove_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_edge" title="Link to this definition">#</a></dt>
+<dd><p>Removes the edge and invalidates the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>int</em>) – The parent id.</p></li>
+<li><p><strong>child</strong> (<em>int</em>) – The child id.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_edges_from">
+<span class="sig-name descname"><span class="pre">remove_edges_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ebunch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_from" title="Link to this definition">#</a></dt>
+<dd><p>Removes the edges and invalidates the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ebunch</strong> – The edges to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_edges_to_children">
+<span class="sig-name descname"><span class="pre">remove_edges_to_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_children" title="Link to this definition">#</a></dt>
+<dd><p>Removes all the edges going to the children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>int</em>) – The node to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_edges_to_parents">
+<span class="sig-name descname"><span class="pre">remove_edges_to_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_parents" title="Link to this definition">#</a></dt>
+<dd><p>Removes all the edges going to this vertex from the parents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>int</em>) – The node to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_isolated_vertices">
+<span class="sig-name descname"><span class="pre">remove_isolated_vertices</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_isolated_vertices" title="Link to this definition">#</a></dt>
+<dd><p>Removes all isolated vertices.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_node">
+<span class="sig-name descname"><span class="pre">remove_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_node" title="Link to this definition">#</a></dt>
+<dd><p>Removes the node from the graph and invalidates the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vertex</strong> (<em>int</em>) – The node to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.remove_nodes_from">
+<span class="sig-name descname"><span class="pre">remove_nodes_from</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.remove_nodes_from" title="Link to this definition">#</a></dt>
+<dd><p>Removes all the given nodes and invalidates the levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nodes</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The nodes to be removed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.save_ascending_graph_to_file">
+<span class="sig-name descname"><span class="pre">save_ascending_graph_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.save_ascending_graph_to_file" title="Link to this definition">#</a></dt>
+<dd><p>Saves the graph ascending from the given vertices to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>) – The vertices for which the ascending graph should be saved.</p></li>
+<li><p><strong>filepath</strong> (<em>str</em>) – The path of the resulting file.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – The string used to separate the columns in the file. The default is ‘ ‘.</p></li>
+<li><p><strong>missing_parent_notation</strong> (<em>str</em>) – The string used to indicate that the parent is not known.
+The default is “-1”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.save_to_file" title="Link to this definition">#</a></dt>
+<dd><p>Saves the graph to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – The path of the resulting file.</p></li>
+<li><p><strong>separator</strong> (<em>str</em>) – The string used to separate the columns in the file. The default is ‘ ‘.</p></li>
+<li><p><strong>missing_parent_notation</strong> (<em>str</em>) – The string used to indicate that the parent is not known.
+The default is “-1”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.save_vertices_to_file">
+<span class="sig-name descname"><span class="pre">save_vertices_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">missing_parent_notation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'-1'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.save_vertices_to_file" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em> | </em><em>Path</em>)</p></li>
+<li><p><strong>vertices</strong> (<em>Iterable</em><em>[</em><em>int</em><em>]</em>)</p></li>
+<li><p><strong>separator</strong> (<em>str</em>)</p></li>
+<li><p><strong>missing_parent_notation</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.to_data_frame">
+<span class="sig-name descname"><span class="pre">to_data_frame</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.to_data_frame" title="Link to this definition">#</a></dt>
+<dd><p>Convert a GenGraph object to a DataFrame. Formatted for workflows with libraries such as sgkit.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="lineagekit.core.GenGraph.GenGraph.verify_max_parents_number">
+<span class="sig-name descname"><span class="pre">verify_max_parents_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_parents_number</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lineagekit.core.GenGraph.GenGraph.verify_max_parents_number" title="Link to this definition">#</a></dt>
+<dd><p>Returns whether every vertex has no more than the given max_parents_number parents.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the vertex has no more than the given max_parents_number parents, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max_parents_number</strong> (<em>int</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="quickstart.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Quickstart</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="abstract_pedigree.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Abstract Pedigree</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-lineagekit.core.GenGraph">API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph"><code class="docutils literal notranslate"><span class="pre">GenGraph</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.__init__"><code class="docutils literal notranslate"><span class="pre">GenGraph.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_edges_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_edges_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_node"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_nodes_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_nodes_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.add_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.add_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.copy"><code class="docutils literal notranslate"><span class="pre">GenGraph.copy()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_graph_from_vertices_by_levels"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_ascending_graph_from_vertices_by_levels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_ascending_vertices_from_probands"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_ascending_vertices_from_probands()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_children_for_list"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_children_for_list()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_connected_component_for_vertex"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_connected_component_for_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_connected_components"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_connected_components()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_descendants_for_vertex"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_descendants_for_vertex()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_founders"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_founders()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_graph_from_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_graph_from_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_levels"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_levels()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_parents_for_list"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_parents_for_list()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_sink_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_sink_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_top_level_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_top_level_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertex_level"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertex_level()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_for_given_level"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertices_for_given_level()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.get_vertices_number"><code class="docutils literal notranslate"><span class="pre">GenGraph.get_vertices_number()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.has_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.has_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.is_founder"><code class="docutils literal notranslate"><span class="pre">GenGraph.is_founder()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.is_parent"><code class="docutils literal notranslate"><span class="pre">GenGraph.is_parent()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.parse_line"><code class="docutils literal notranslate"><span class="pre">GenGraph.parse_line()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_ascending_graph"><code class="docutils literal notranslate"><span class="pre">GenGraph.reduce_to_ascending_graph()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.reduce_to_subgraph"><code class="docutils literal notranslate"><span class="pre">GenGraph.reduce_to_subgraph()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edge"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edge()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_children"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_to_children()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_edges_to_parents"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_edges_to_parents()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_isolated_vertices"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_isolated_vertices()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_node"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_node()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.remove_nodes_from"><code class="docutils literal notranslate"><span class="pre">GenGraph.remove_nodes_from()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_ascending_graph_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_ascending_graph_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.save_vertices_to_file"><code class="docutils literal notranslate"><span class="pre">GenGraph.save_vertices_to_file()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.to_data_frame"><code class="docutils literal notranslate"><span class="pre">GenGraph.to_data_frame()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#lineagekit.core.GenGraph.GenGraph.verify_max_parents_number"><code class="docutils literal notranslate"><span class="pre">GenGraph.verify_max_parents_number()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Andrii Serdiuk
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025, Andrii Serdiuk.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
