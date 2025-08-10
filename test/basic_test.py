@@ -4,12 +4,12 @@ from typing import Iterable
 
 import networkx
 import pytest
-from lineagekit.core.CoalescentTree import CoalescentTree
-from lineagekit.core.GenGraph import GenGraph
-from lineagekit.core.Pedigree import Pedigree
-from lineagekit.core.PloidPedigree import PloidPedigree
+from lineagekit.core.coalescent_tree import CoalescentTree
+from lineagekit.core.gen_graph import GenGraph
+from lineagekit.core.pedigree import Pedigree
+from lineagekit.core.ploid_pedigree import PloidPedigree
 
-from lineagekit.core.AbstractPedigree import AbstractPedigree
+from lineagekit.core.abstract_pedigree import AbstractPedigree
 
 
 @pytest.fixture

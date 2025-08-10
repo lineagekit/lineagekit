@@ -3,7 +3,7 @@ import os
 import numpy
 import pytest
 
-from lineagekit.core.Pedigree import Pedigree
+from lineagekit.core.pedigree import Pedigree
 
 
 @pytest.fixture

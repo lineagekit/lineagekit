@@ -5,7 +5,7 @@ from typing import Iterable
 from lineagekit import kinship
 import numpy as np
 
-from lineagekit.core.GenGraph import GenGraph
+from lineagekit.core.gen_graph import GenGraph
 
 from abc import ABC, abstractmethod
 import random

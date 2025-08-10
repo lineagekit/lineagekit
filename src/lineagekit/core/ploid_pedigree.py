@@ -5,7 +5,7 @@ import warnings
 from pathlib import Path
 from typing import Iterable
 
-from lineagekit.core.AbstractPedigree import AbstractPedigree
+from lineagekit.core.abstract_pedigree import AbstractPedigree
 
 from lineagekit.utility.utility import random_subselect_poisson
 

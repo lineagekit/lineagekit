@@ -4,8 +4,8 @@ import pytest
 import os
 import glob
 
-from lineagekit.core.AbstractPedigree import KinshipMode
-from lineagekit.core.Pedigree import *
+from lineagekit.core.abstract_pedigree import KinshipMode
+from lineagekit.core.pedigree import *
 
 accuracy_precision = 0.001
 

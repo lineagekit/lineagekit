@@ -7,7 +7,7 @@ from typing import Iterable
 
 from tskit import Tree, TreeSequence
 
-from lineagekit.core.GenGraph import GenGraph
+from lineagekit.core.gen_graph import GenGraph
 
 
 class CoalescentTree(GenGraph):

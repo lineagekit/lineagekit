@@ -1,5 +1,5 @@
-from lineagekit.core.CoalescentTree import CoalescentTree
-from lineagekit.core.PloidPedigree import PloidPedigree
+from lineagekit.core.coalescent_tree import CoalescentTree
+from lineagekit.core.ploid_pedigree import PloidPedigree
 from lineagekit.utility.utility import *
 
 

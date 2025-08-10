@@ -1,4 +1,4 @@
-from lineagekit.core.GenGraph import GenGraph
+from lineagekit.core.gen_graph import GenGraph
 from lineagekit.utility.utility import get_file_path, get_non_existing_path
 
 

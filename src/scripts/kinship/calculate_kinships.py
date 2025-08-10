@@ -1,6 +1,6 @@
 import itertools
 
-from lineagekit.core.Pedigree import Pedigree
+from lineagekit.core.pedigree import Pedigree
 from lineagekit.utility.utility import *
 import time
 

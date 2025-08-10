@@ -1,4 +1,4 @@
-from lineagekit.core.GenGraph import GenGraph
+from lineagekit.core.gen_graph import GenGraph
 import csv
 
 individual_column = 'ind'

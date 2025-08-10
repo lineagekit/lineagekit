@@ -1,4 +1,4 @@
-from lineagekit.core.Pedigree import Pedigree
+from lineagekit.core.pedigree import Pedigree
 from lineagekit.utility.utility import *
 
 filepath = get_file_path("Specify the path to the pedigree:")
